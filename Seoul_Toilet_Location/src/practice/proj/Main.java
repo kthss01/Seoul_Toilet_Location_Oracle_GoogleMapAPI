@@ -44,6 +44,7 @@ public class Main {
 		System.out.println("GRS80 : " + dstProject);
 
 		srcProjec = new Point2D.Double(958373.896842, 1957963.322347);
+//		srcProjec = new Point2D.Double(1957963.322347, 958373.896842);
 		dstProject = projection.inverseTransform(srcProjec, new Point2D.Double());
 
 		System.out.println("WGS84 : " + dstProject);

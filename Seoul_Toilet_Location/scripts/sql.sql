@@ -9,17 +9,6 @@ GRANT CREATE VIEW, SYNONYM TO GCP_KTH;
 -- 해당 열 중 필요하다고 생각한 열 정리
 -- JDBC에서 편하게 쓰기위해 영어명으로 바꿔서 뷰로 만들 예정
 
---                                   영어   
---      시도명                    
---      시군구명
---      읍면동명
---      도로명코드 - PK
---      도로명
---      건물명
---      관할행정동
---      X좌표
---      Y좌표
-
 SELECT 건물군여부, 관할행정동 FROM SEOUL_LOCATION WHERE ROWNUM < 100; 
 -- 건물군여부 필요 x, 관할행정동 일단 애매해서 놔두기로 함
 
@@ -41,28 +30,6 @@ SELECT X좌표, Y좌표 FROM SEOUL_LOCATION WHERE ROWNUM < 100; -- 953241.683262
 
 -------------------------------------------------------------
 -- SEOUL_TOILET
-
---                               영어명
---      콘텐츠_ID - PK
---      사용유무
---      콘텐츠명
---      서브카테고리_명
---      구명
---      도로명_주소
---      지번주소
---      좌표_X
---      좌표_Y
---      전화번호
---      상세_제목1
---      상세_내용1
---      상세_제목2
---      상세_내용2
---      상세_제목3
---      상세_내용3
---      상세_제목4
---      상세_내용4
---      상세_제목5
---      상세_내용5
 
 SELECT 사용유무 FROM SEOUL_TOILET GROUP BY 사용유무 ORDER BY 1; -- N, Y N도 있어서 빼면 안됨
 
@@ -160,11 +127,14 @@ SELECT 상세_내용3 FROM SEOUL_TOILET WHERE 상세_제목3 = '변기현황' GR
 
 SELECT 상세_내용3 FROM SEOUL_TOILET WHERE 상세_제목3 = '소재지 용도' GROUP BY 상세_내용3; -- 35개
 SELECT 상세_내용3 FROM SEOUL_TOILET WHERE 상세_제목3 = '소재지용도' GROUP BY 상세_내용3; -- 20개
+UPDATE SEOUL_TOILET SET 상세_제목3 = '소재지용도' WHERE 상세_제목3 = '소재지 용도';
 
+COMMIT;
 ------------------
 SELECT 상세_제목4 FROM SEOUL_TOILET GROUP BY 상세_제목4; -- 10개, 기타설비, 장애인화장실유무, null, 장애인화장실, 장애인화장실 유무, 기타시설, 장애인시설유무, 변기현황, 편의시설, 장애인시설 -> 정리 필요
 
 SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '기타설비' GROUP BY 상세_내용4; -- 36개, 비상벨, CCTV 같은 얘기
+UPDATE SEOUL_TOILET SET 상세_제목4 = '기타설비' WHERE 상세_제목4 = '기타시설';
 SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '기타시설' GROUP BY 상세_내용4; -- 3개 null, 위와 비슷 합쳐야함
 
 SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '장애인화장실유무' GROUP BY 상세_내용4; -- null
@@ -172,22 +142,142 @@ SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '장애인화장�
 SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '장애인화장실 유무' GROUP BY 상세_내용4; -- null
 SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '장애인시설유무' GROUP BY 상세_내용4; -- null
 SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '장애인시설' GROUP BY 상세_내용4; -- null
+UPDATE SEOUL_TOILET SET 상세_제목4 = '장애인화장실' WHERE 상세_제목4 IN('장애인화장실유무', '장애인화장실 유무', '장애인시설유무', '장애인시설');
 
 SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '변기현황' GROUP BY 상세_내용4; -- 3개 상세_내용3으로 옮겨야함
-]
+UPDATE SEOUL_TOILET SET 상세_제목4 = '화장실현황' WHERE 상세_제목4 = '변기현황';
+
 SELECT 상세_내용4 FROM SEOUL_TOILET WHERE 상세_제목4 = '편의시설' GROUP BY 상세_내용4; -- 3개 null, 편의시설, 손건조기, 상세내용 5와 합쳐야함
 
+COMMIT;
 
 ------------------
 SELECT 상세_제목5 FROM SEOUL_TOILET GROUP BY 상세_제목5; -- 7개, null, 기타설비, 편의시설 유무, 편의시설 설치여부, 비고, 기타시설, 편의시설 -> 정리 필요
 
 SELECT 상세_내용5 FROM SEOUL_TOILET WHERE 상세_제목5 = '기타설비' GROUP BY 상세_내용5; -- 2개, 비상벨 설치 여부, 상세내용4와 합쳐야함
 SELECT 상세_내용5 FROM SEOUL_TOILET WHERE 상세_제목5 = '기타시설' GROUP BY 상세_내용5; -- 비상벨 설치 여부 상세내용4와 합쳐야함
+UPDATE SEOUL_TOILET SET 상세_제목5 = '기타설비' WHERE 상세_제목5 = '기타시설';
+
 
 SELECT 상세_내용5 FROM SEOUL_TOILET WHERE 상세_제목5 = '편의시설 유무' GROUP BY 상세_내용5; -- null
 SELECT 상세_내용5 FROM SEOUL_TOILET WHERE 상세_제목5 = '편의시설 설치여부' GROUP BY 상세_내용5; -- null
 SELECT 상세_내용5 FROM SEOUL_TOILET WHERE 상세_제목5 = '편의시설' GROUP BY 상세_내용5; -- 348개, 빈값도 있음, 기저귀교환대4유아용보호의자2비상벨6손건조기6 이런 형태
+UPDATE SEOUL_TOILET SET 상세_제목5 = '편의시설' WHERE 상세_제목5 IN ('편의시설 유무', '편의시설 설치여부');
 
 SELECT 상세_내용5 FROM SEOUL_TOILET WHERE 상세_제목5 = '비고' GROUP BY 상세_내용5; -- 2개, 1층 장애인화장실 / 2층 일반화장실, 산지형 공원
 
+COMMIT;
+
 ------------------
+
+-- 해당 위치에 가까운 화장실 판별하기 위해 구별로 햇을 때 몇개의 화장실이 나오는지 확인
+SELECT 구명, COUNT(*) FROM SEOUL_TOILET GROUP BY 구명;
+SELECT * FROM SEOUL_TOILET WHERE 구명 IS NULL; -- NULL 처리 필요할듯 14개 1는 구로구 나머진 강남구로 변경하면 됨
+
+UPDATE SEOUL_TOILET SET 구명 = '구로구' WHERE 콘텐츠_ID = 'restgu17_0119';
+UPDATE SEOUL_TOILET SET 구명 = '강남구' WHERE 구명 IS NULL;
+
+COMMIT;
+
+SELECT * FROM SEOUL_TOILET WHERE 사용유무 IS NULL;
+SELECT * FROM SEOUL_TOILET WHERE 콘텐츠명 IS NULL;
+
+SELECT * FROM SEOUL_TOILET WHERE 서브카테고리_명 IS NULL; -- NULL 처리 필요 상시 or 정시로. 54개
+SELECT 서브카테고리_명 FROM SEOUL_TOILET GROUP BY 서브카테고리_명;
+-- NULL 값 중 상시 처리 조건 - 상세_내용2 기준 상시, 24시간, 24시
+-- 정시 처리 조건 - 나머지
+UPDATE SEOUL_TOILET SET 서브카테고리_명 = '상시' WHERE 서브카테고리_명 IS NULL AND 상세_내용2 IN ('상시', '24시간', '24시');
+UPDATE SEOUL_TOILET SET 서브카테고리_명 = '정시' WHERE 서브카테고리_명 IS NULL AND 상세_내용2 NOT IN ('상시', '24시간', '24시');
+UPDATE SEOUL_TOILET SET 서브카테고리_명 = '정시' WHERE 서브카테고리_명 IS NULL AND 상세_내용2 IS NULL;
+
+COMMIT;
+ROLLBACK;
+
+SELECT * FROM SEOUL_TOILET WHERE 구명 IS NULL;
+
+SELECT * FROM SEOUL_TOILET WHERE 도로명_주소 IS NULL;
+SELECT COUNT(*) FROM SEOUL_TOILET WHERE 도로명_주소 IS NULL; -- 259개
+-- 이건 필요하진 않을거 같아 처리 x
+
+-- 도로명으로 구분할 땐 어떻게 되는지 확인 앞에 도로명 길이가 애매하고 NULL도 있어서 이 방법으론 못 나눌듯)
+
+-- 물리모델링 - 컬럼명 영어로 해서 뷰 정도만 만들자
+
+-- SEOUL_LOCATION               SEOUL_VIEW
+--                                   영어   
+--      시도명                    
+--      시군구명
+--      읍면동명
+--      도로명코드 - PK -> PK로 못씀
+--      도로명
+--      건물본번        - 이 2개도 필요함
+--      건물부번     
+--      건물명
+--      관할행정동
+--      X좌표
+--      Y좌표
+
+CREATE OR REPLACE VIEW SEOUL_VIEW
+    (ROAD_CODE, SI_DO_NAME, SI_GUN_GU_NAME, EUP_MYEON_DONG_NAME, ROAD_ADDRESS, BUILDING_MAIN_NUM, BUILDING_SUB_NUM, BUILDING_NAME, HANG_JUNG_DONG_NAME, LOC_X, LOC_Y)
+AS 
+    SELECT
+        도로명코드, 시도명, 시군구명, 읍면동명, 도로명, 건물본번, 건물부번, 건물명, 관할행정동, X좌표, Y좌표
+    FROM SEOUL_LOCATION;
+    
+SELECT * FROM SEOUL_VIEW WHERE ROWNUM < 100;
+
+-- 테스트
+SELECT * FROM SEOUL_VIEW WHERE BUILDING_NAME LIKE '서울역%';
+SELECT * FROM SEOUL_VIEW WHERE BUILDING_NAME LIKE '강남역%';
+SELECT * FROM SEOUL_VIEW WHERE BUILDING_NAME LIKE '%교보%';
+
+SELECT * FROM SEOUL_VIEW WHERE ROAD_NAME = '종로' AND BUILDING_NAME = '교보생명빌딩';
+SELECT * FROM SEOUL_VIEW WHERE ROAD_NAME = '장충단로13길';
+SELECT * FROM SEOUL_VIEW WHERE ROAD_NAME = '테헤란로14길' AND BUILDING_MAIN_NUM = '6';
+
+---------------------------------------------
+--        SEOUL_TOILET         TOILET_VIEW
+--                               영어명
+--      콘텐츠_ID - PK             
+--      사용유무
+--      콘텐츠명
+--      서브카테고리_명
+--      구명
+--      도로명_주소
+--      지번주소
+--      좌표_X
+--      좌표_Y
+--      전화번호
+--      상세_제목1
+--      상세_내용1
+--      상세_제목2
+--      상세_내용2
+--      상세_제목3
+--      상세_내용3
+--      상세_제목4
+--      상세_내용4
+--      상세_제목5
+--      상세_내용5
+
+CREATE OR REPLACE VIEW TOILET_VIEW
+    (TOILET_ID, USEABLE, LOCATION_NAME, USING_TIME, GU_NAME, ROAD_ADDRESS, NUM_ADDRESS, LOC_X, LOC_Y, PHONE, 
+    DETAIL_NAME1, DETAIL_CONTENT1, DETAIL_NAME2, DETAIL_CONTENT2, DETAIL_NAME3, DETAIL_CONTENT3, DETAIL_NAME4, DETAIL_CONTENT4, DETAIL_NAME5, DETAIL_CONTENT5)
+AS
+    SELECT 
+        콘텐츠_ID, 사용유무, 콘텐츠명, 서브카테고리_명, 구명, 도로명_주소, 지번주소, 좌표_X, 좌표_Y, 전화번호,
+        상세_제목1, 상세_내용1, 상세_제목2, 상세_내용2, 상세_제목3, 상세_내용3, 상세_제목4, 상세_내용4, 상세_제목5, 상세_내용5
+    FROM SEOUL_TOILET;
+    
+SELECT * FROM TOILET_VIEW WHERE ROWNUM < 100;
+    
+-- query
+SELECT ROAD_ADDRESS, BUILDING_MAIN_NUM, BUILDING_SUB_NUM, BUILDING_NAME, LOC_X, LOC_Y FROM SEOUL_VIEW;
+
+SELECT ROAD_ADDRESS, BUILDING_MAIN_NUM, BUILDING_SUB_NUM, BUILDING_NAME, LOC_X, LOC_Y FROM SEOUL_VIEW WHERE LOC_X IS NULL OR LOC_Y IS NULL;
+SELECT COUNT(*) FROM SEOUL_VIEW WHERE LOC_X IS NULL OR LOC_Y IS NULL; -- 454개
+SELECT ROAD_ADDRESS, BUILDING_MAIN_NUM, BUILDING_SUB_NUM, LOC_X, LOC_Y FROM SEOUL_VIEW WHERE ROAD_ADDRESS IS NULL OR BUILDING_MAIN_NUM IS NULL OR BUILDING_SUB_NUM IS NULL;
+
+SELECT COUNT(*) FROM TOILET_VIEW;
+
+UPDATE SEOUL_VIEW SET LOC_X = 0, LOC_Y = 0 WHERE ROAD_ADDRESS = '자하문로' AND BUILDING_MAIN_NUM = 94 AND BUILDING_SUB_NUM = 0; 
+ROLLBACK;
