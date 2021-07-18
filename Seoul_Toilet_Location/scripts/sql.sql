@@ -93,6 +93,7 @@ SELECT 전화번호 FROM SEOUL_TOILET WHERE ROWNUM < 100;
 SELECT COUNT(전화번호) FROM SEOUL_TOILET; -- 4527개
 
 SELECT COUNT(전화번호) FROM SEOUL_TOILET WHERE 전화번호 LIKE '02-%'; -- 4146 02로 시작하는 전화번호
+SELECT 전화번호 FROM SEOUL_TOILET WHERE 전화번호 LIKE '02-%';
 
 SELECT COUNT(전화번호) FROM SEOUL_TOILET WHERE 전화번호 NOT LIKE '02-%'; -- 381 02로 시작하지 않는 전화번호 -> 수정 필요
 SELECT 전화번호 FROM SEOUL_TOILET WHERE 전화번호 NOT LIKE '02-%';
@@ -103,23 +104,57 @@ SELECT COUNT(*) FROM SEOUL_TOILET WHERE 전화번호 IS NULL; -- 전화번호 �
 ------------------
 SELECT 상세_제목1 FROM SEOUL_TOILET GROUP BY 상세_제목1; -- 상세위치, null, 유형, 시설구분
 SELECT COUNT(상세_제목1) FROM SEOUL_TOILET WHERE 상세_제목1 = '시설구분'; -- 64개
+SELECT 상세_내용1 FROM SEOUL_TOILET WHERE 상세_제목1 = '시설구분' GROUP BY 상세_내용1;
 SELECT 상세_내용1 FROM SEOUL_TOILET WHERE 상세_제목1 = '상세위치'; -- 3개, 쌍한교 옆, 강북소방서 건너편, 우이천변 초안교 옆, 강북구민운동장사거리 측
+
 SELECT 상세_내용1 FROM SEOUL_TOILET WHERE 상세_제목1 = '유형';
 SELECT 상세_내용1 FROM SEOUL_TOILET WHERE 상세_제목1 = '유형' GROUP BY 상세_내용1; -- 11개, 민간개방공중화장실, 개방시간1,2, 민간개방, 공중, 민간개방1, 무인공중, 개방시간3, 공공개방, 공원, 공중화장실
+SELECT 상세_내용1, COUNT(*) FROM SEOUL_TOILET WHERE 상세_제목1 = '유형' GROUP BY 상세_내용1;
+
+SELECT * FROM SEOUL_TOILET WHERE 상세_내용1 = '민간개방공중화장실'; -- 1개
+UPDATE SEOUL_TOILET SET 상세_내용1 = '민간개방' WHERE 상세_내용1 = '민간개방공중화장실';
+
+SELECT * FROM SEOUL_TOILET WHERE 상세_내용1 = '공중'; -- 1594개
+UPDATE SEOUL_TOILET SET 상세_내용1 = '공공개방' WHERE 상세_내용1 = '공중';
+
+SELECT * FROM SEOUL_TOILET WHERE 상세_내용1 = '무인공중'; -- 10개
+UPDATE SEOUL_TOILET SET 상세_내용1 = '공공개방' WHERE 상세_내용1 = '무인공중';
+
+SELECT * FROM SEOUL_TOILET WHERE 상세_내용1 = '민간개방'; -- 283개
+SELECT * FROM SEOUL_TOILET WHERE 상세_내용1 = '민간개방1'; -- 664개
+UPDATE SEOUL_TOILET SET 상세_내용1 = '민간개방' WHERE 상세_내용1 = '민간개방1';
+
+SELECT * FROM SEOUL_TOILET WHERE 상세_내용1 = '공공개방'; -- 1950개
+
+SELECT * FROM SEOUL_TOILET WHERE 상세_제목1 = '유형' AND 상세_내용1 = '공원'; -- 4개 -> 상세제목1 시설구분으로 가야함
+UPDATE SEOUL_TOILET SET 상세_제목1 = '시설구분' WHERE 상세_제목1 = '유형' AND 상세_내용1 = '공원';
+SELECT * FROM SEOUL_TOILET WHERE 상세_제목1 = '유형' AND 상세_내용1 = '공중화장실'; -- 2개 -> 상세제목1 시설구분으로 가야함
+UPDATE SEOUL_TOILET SET 상세_제목1 = '시설구분' WHERE 상세_제목1 = '유형' AND 상세_내용1 = '공중화장실';
+
+COMMIT;
+
 SELECT 상세_내용1 FROM SEOUL_TOILET WHERE 상세_제목1 = '시설구분' GROUP BY 상세_내용1; -- 기타, 공공기관, 병원, 개방화장실, 공중화장실, 공원
+
+-- 유형에서 개방시간 부분은 2파트로 넘겨야한다
+SELECT 상세_내용1 FROM SEOUL_TOILET WHERE 상세_제목1 = '유형' GROUP BY 상세_내용1; -- 3개, 개방시간1,2,3, 민간개방, 공공개방,
+SELECT * FROM SEOUL_TOILET WHERE 상세_제목1 = '유형' AND 상세_내용1 NOT IN ('민간개방', '공공개방');
 
 ------------------
 SELECT 상세_제목2 FROM SEOUL_TOILET GROUP BY 상세_제목2; -- null, 개방시간, 시설구분
 SELECT COUNT(상세_제목2) FROM SEOUL_TOILET WHERE 상세_제목2 = '시설구분'; -- 3개 상세_제목1로 옮겨야함
 
-SELECT 상세_내용2 FROM SEOUL_TOILET WHERE 상세_제목2 = '개방시간' GROUP BY 상세_내용2; -- 366개, 정시,상시,평일이 포함디기도 함 null, (시간)이렇게 되어잇기도 함
+SELECT * FROM SEOUL_TOILET WHERE 상세_제목2 = '시설구분';
+
+SELECT 상세_내용2 FROM SEOUL_TOILET WHERE 상세_제목2 = '개방시간' GROUP BY 상세_내용2; -- 366개, 정시,상시,평일이 포함되기도 함 null, (시간)이렇게 되어잇기도 함
 SELECT 상세_내용2 FROM SEOUL_TOILET WHERE 상세_제목2 = '시설구분' GROUP BY 상세_내용2; -- 공중화장실
 
 ------------------
 SELECT 상세_제목3 FROM SEOUL_TOILET GROUP BY 상세_제목3; -- null, 개방시간, 화장실현황, 소재지 용도, 소재지용도, 화장실 현황, 변기현황 -> 정리 필요
-SELECT 상세_내용3 FROM SEOUL_TOILET WHERE 상세_제목3 = '개방시간' GROUP BY 상세_내용3; -- 1개 24시간 상세_제목2로 옮겨야할듯
+SELECT 상세_내용3 FROM SEOUL_TOILET WHERE 상세_제목3 = '개방시간' GROUP BY 상세_내용3; -- 1개 24시간 상세_제목2로 옮겨야할듯 -> 이것도 상세위치 때문에 밀린거 놔두자
+SELECT * FROM SEOUL_TOILET WHERE 상세_제목3 = '개방시간';
 
 SELECT 상세_내용3 FROM SEOUL_TOILET WHERE 상세_제목3 = '화장실현황' GROUP BY 상세_내용3; -- 16개 남자: 대변기1 소변기2 /여자: 대변기1 / 장애인화장실(공용) 이런 형태
+UPDATE SEOUL_TOILET SET 상세_제목3 = '화장실현황' WHERE 상세_제목3 = '화장실 현황' OR 상세_제목3 = '변기현황';
 SELECT 상세_내용3 FROM SEOUL_TOILET WHERE 상세_제목3 = '화장실 현황' GROUP BY 상세_내용3; -- 19개 위와 같은 형태
 SELECT 상세_내용3 FROM SEOUL_TOILET WHERE 상세_제목3 = '변기현황' GROUP BY 상세_내용3; -- 18개 위와 같은 형태
 
