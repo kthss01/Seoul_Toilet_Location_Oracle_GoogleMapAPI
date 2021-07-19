@@ -19,6 +19,10 @@ public class Main {
 		// test
 		double d = distance(37.620154692, 127.028265783, 37.637437605, 127.027308394, "meter");
 		System.out.println(d);
+		
+		double d2 = distance(33.504274, 126.529182, 33.524383, 126.544333, "meter");
+		System.out.println(d2);
+		
 	}
 
 	/**
