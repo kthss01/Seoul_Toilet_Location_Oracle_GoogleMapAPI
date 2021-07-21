@@ -1,13 +1,27 @@
 package com.kay.common;
 
 import java.awt.geom.Point2D;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
+import com.kay.controller.MainController;
+import com.kay.model.vo.Toilet;
 
 public class LocationTemplate {
 	
 	private static Projection proj = null;
+	
+	private static Map<String, Toilet> toiletMap = null;
+	
+	public static Map<String, Toilet> getToilet() {
+		if (toiletMap == null) {
+			toiletMap = new MainController().selectAllToilet();
+		}
+		
+		return toiletMap;
+	}
 	
 	public static Projection getPojection() {
 		if (proj == null) {
@@ -72,4 +86,6 @@ public class LocationTemplate {
 	private static double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
     }
+	
+	
 }

@@ -7,10 +7,12 @@ import static com.kay.common.JDBCTemplate.rollback;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.kay.model.dao.MainDAO;
 import com.kay.model.exception.MainException;
 import com.kay.model.vo.Location;
+import com.kay.model.vo.Toilet;
 
 public class MainService {
 	public void exitProgram() {
@@ -48,5 +50,14 @@ public class MainService {
 
 		return result;
 		
+	}
+
+	public Map<String, Toilet> selectAllToilet() throws MainException {
+		
+		Connection conn = getConnection();
+		
+		Map<String, Toilet> map = new MainDAO().selectAllToilet(conn);
+		
+		return map;
 	}
 }

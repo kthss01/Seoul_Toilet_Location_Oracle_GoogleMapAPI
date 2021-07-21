@@ -3,7 +3,7 @@ package com.kay.model.vo;
 public class Toilet {
 	private float distance;
 	private String id;
-	private String userable;
+	private String useable;
 	private String locationName;
 	private String usingTime;
 	private String guName;
@@ -14,27 +14,27 @@ public class Toilet {
 	private String phone;
 
 	private String detailName1;
-	private String datailContent1;
+	private String detailContent1;
 	private String detailName2;
-	private String datailContent2;
+	private String detailContent2;
 	private String detailName3;
-	private String datailContent3;
+	private String detailContent3;
 	private String detailName4;
-	private String datailContent4;
+	private String detailContent4;
 	private String detailName5;
-	private String datailContent5;
+	private String detailContent5;
 
 	public Toilet() {
 	}
 
-	public Toilet(String id, String userable, String locationName, String usingTime, String guName,
+	public Toilet(String id, String useable, String locationName, String usingTime, String guName,
 			String roadAddress, String numAddress, String locX, String locY, String phone, String detailName1,
 			String datailContent1, String detailName2, String datailContent2, String detailName3, String datailContent3,
 			String detailName4, String datailContent4, String detailName5, String datailContent5) {
 		super();
 		this.distance = -1;
 		this.id = id;
-		this.userable = userable;
+		this.useable = useable;
 		this.locationName = locationName;
 		this.usingTime = usingTime;
 		this.guName = guName;
@@ -44,15 +44,15 @@ public class Toilet {
 		this.locY = locY;
 		this.phone = phone;
 		this.detailName1 = detailName1;
-		this.datailContent1 = datailContent1;
+		this.detailContent1 = datailContent1;
 		this.detailName2 = detailName2;
-		this.datailContent2 = datailContent2;
+		this.detailContent2 = datailContent2;
 		this.detailName3 = detailName3;
-		this.datailContent3 = datailContent3;
+		this.detailContent3 = datailContent3;
 		this.detailName4 = detailName4;
-		this.datailContent4 = datailContent4;
+		this.detailContent4 = datailContent4;
 		this.detailName5 = detailName5;
-		this.datailContent5 = datailContent5;
+		this.detailContent5 = datailContent5;
 	}
 
 	public float getDistance() {
@@ -71,12 +71,12 @@ public class Toilet {
 		this.id = id;
 	}
 
-	public String getUserable() {
-		return userable;
+	public String getUseable() {
+		return useable;
 	}
 
-	public void setUserable(String userable) {
-		this.userable = userable;
+	public void setUseable(String useable) {
+		this.useable = useable;
 	}
 
 	public String getLocationName() {
@@ -152,11 +152,11 @@ public class Toilet {
 	}
 
 	public String getDatailContent1() {
-		return datailContent1;
+		return detailContent1;
 	}
 
 	public void setDatailContent1(String datailContent1) {
-		this.datailContent1 = datailContent1;
+		this.detailContent1 = datailContent1;
 	}
 
 	public String getDetailName2() {
@@ -168,11 +168,11 @@ public class Toilet {
 	}
 
 	public String getDatailContent2() {
-		return datailContent2;
+		return detailContent2;
 	}
 
 	public void setDatailContent2(String datailContent2) {
-		this.datailContent2 = datailContent2;
+		this.detailContent2 = datailContent2;
 	}
 
 	public String getDetailName3() {
@@ -184,11 +184,11 @@ public class Toilet {
 	}
 
 	public String getDatailContent3() {
-		return datailContent3;
+		return detailContent3;
 	}
 
 	public void setDatailContent3(String datailContent3) {
-		this.datailContent3 = datailContent3;
+		this.detailContent3 = datailContent3;
 	}
 
 	public String getDetailName4() {
@@ -200,11 +200,11 @@ public class Toilet {
 	}
 
 	public String getDatailContent4() {
-		return datailContent4;
+		return detailContent4;
 	}
 
 	public void setDatailContent4(String datailContent4) {
-		this.datailContent4 = datailContent4;
+		this.detailContent4 = datailContent4;
 	}
 
 	public String getDetailName5() {
@@ -216,22 +216,29 @@ public class Toilet {
 	}
 
 	public String getDatailContent5() {
-		return datailContent5;
+		return detailContent5;
 	}
 
 	public void setDatailContent5(String datailContent5) {
-		this.datailContent5 = datailContent5;
+		this.detailContent5 = datailContent5;
 	}
 
 	@Override
 	public String toString() {
-		return "distance : " + distance + ", id : " + id + ", userable : " + userable + ", locationName : "
-				+ locationName + ", usingTime : " + usingTime + ", guName : " + guName + ", roadAddress : "
-				+ roadAddress + ", numAddress : " + numAddress + ", locX : " + locX + ", locY : " + locY + ", phone : "
-				+ phone + ", detailName1 : " + detailName1 + ", datailContent1 : " + datailContent1 + ", detailName2 : "
-				+ detailName2 + ", datailContent2 : " + datailContent2 + ", detailName3 : " + detailName3
-				+ ", datailContent3 : " + datailContent3 + ", detailName4 : " + detailName4 + ", datailContent4 : "
-				+ datailContent4 + ", detailName5 : " + detailName5 + ", datailContent5 : " + datailContent5;
+		StringBuilder builder = new StringBuilder();
+		builder.append(distance).append("\t").append(id).append("\t")
+				.append(useable).append("\t").append(locationName).append("\t")
+				.append(usingTime).append("\t").append(guName).append("\t").append(roadAddress)
+				.append("\t").append(numAddress).append("\t").append(locX).append("\t")
+				.append(locY).append("\t").append(phone).append("\t").append(detailName1)
+				.append("\t").append(detailContent1).append("\t").append(detailName2)
+				.append("\t").append(detailContent2).append("\t").append(detailName3)
+				.append("\t").append(detailContent3).append("\t").append(detailName4)
+				.append("\t").append(detailContent4).append("\t").append(detailName5)
+				.append("\t").append(detailContent5);
+		return builder.toString();
 	}
+
+	
 
 }

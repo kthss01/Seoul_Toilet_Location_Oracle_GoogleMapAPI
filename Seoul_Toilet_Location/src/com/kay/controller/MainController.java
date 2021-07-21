@@ -7,6 +7,7 @@ import static com.kay.common.GoogleMapTemplate.getMap;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 
@@ -14,6 +15,7 @@ import com.kay.common.LocationTemplate;
 import com.kay.model.exception.MainException;
 import com.kay.model.vo.Location;
 import com.kay.model.vo.Marker;
+import com.kay.model.vo.Toilet;
 import com.kay.service.MainService;
 
 public class MainController {
@@ -101,6 +103,18 @@ public class MainController {
 		} catch (MainException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	public Map<String, Toilet> selectAllToilet() {
+		Map<String, Toilet> map = null;
+		
+		try {
+			map = new MainService().selectAllToilet();
+		} catch (MainException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return map;
 	}
 	
 	
