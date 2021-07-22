@@ -60,4 +60,30 @@ public class MainService {
 		
 		return map;
 	}
+
+	public Location selectAddressSeoulLocation(String address, String mainNum, String subNum) throws MainException {
+		
+		Connection conn = getConnection();
+		
+		Location location = new MainDAO().selectAddressSeoulLocation(conn, address, mainNum, subNum);
+		
+		return location;
+	}
+
+	public Location selectXYSeoulLocation(String loc_x, String loc_y) throws MainException {
+
+		Connection conn = getConnection();
+		
+		Location location = new MainDAO().selectXYSeoulLocation(conn, loc_x, loc_y);
+		
+		return location;
+	}
+
+	public void selectFindToilet(String loc_x, String loc_y) throws MainException {
+		
+		Connection conn = getConnection();
+		
+		new MainDAO().selectFindToilet(conn, loc_x, loc_y);
+		
+	}
 }

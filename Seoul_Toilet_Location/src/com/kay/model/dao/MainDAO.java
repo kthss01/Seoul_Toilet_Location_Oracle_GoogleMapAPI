@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import com.kay.model.vo.Location;
 import com.kay.model.vo.Toilet;
+import com.kay.common.LocationTemplate;
 import com.kay.model.exception.MainException;
 
 public class MainDAO {
@@ -152,5 +153,115 @@ public class MainDAO {
 		}
 
 		return map;
+	}
+
+	public Location selectAddressSeoulLocation(Connection conn, String address, String mainNum, String subNum) throws MainException {
+		Location location = null;
+		
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = prop.getProperty("selectAddressSeoulLocation");
+		
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, address);
+			pstmt.setString(2, mainNum);
+			pstmt.setString(3, subNum);
+
+			rset = pstmt.executeQuery();
+			
+			while (rset.next()) {
+				String siGunGuName = rset.getString("SI_GUN_GU_NAME");
+				String buildingName = rset.getString("BUILDING_NAME");
+				String hangJungDongName = rset.getString("HANG_JUNG_DONG_NAME");
+				String loc_x = rset.getString("LOC_X");
+				String loc_y = rset.getString("LOC_Y");
+				
+				location = new Location(siGunGuName, address, mainNum, subNum, buildingName, hangJungDongName, loc_x, loc_y);
+			}
+			
+		} catch (Exception e) {
+			throw new MainException("selectAddressSeoulLocation 에러 : " + e.getMessage());
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return location;
+	}
+
+	public Location selectXYSeoulLocation(Connection conn, String loc_x, String loc_y) throws MainException {
+		Location location = null;
+		
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = prop.getProperty("selectXYSeoulLocation");
+		
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, loc_x);
+			pstmt.setString(2, loc_y);
+			pstmt.setString(3, loc_x);
+			pstmt.setString(4, loc_y);
+
+			rset = pstmt.executeQuery();
+			
+			while (rset.next()) {
+				String siGunGuName = rset.getString("SI_GUN_GU_NAME");
+				String address = rset.getString("ROAD_ADDRESS");
+				String mainNum = rset.getString("BUILDING_MAIN_NUM");
+				String subNum = rset.getString("BUILDING_SUB_NUM");
+				String buildingName = rset.getString("BUILDING_NAME");
+				String hangJungDongName = rset.getString("HANG_JUNG_DONG_NAME");
+				
+				
+				location = new Location(siGunGuName, address, mainNum, subNum, buildingName, hangJungDongName, loc_x, loc_y);
+			}
+			
+		} catch (Exception e) {
+			throw new MainException("selectXYSeoulLocation 에러 : " + e.getMessage());
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return location;
+	}
+
+	public void selectFindToilet(Connection conn, String loc_x, String loc_y) throws MainException {
+		Map<String, Toilet> toilet = LocationTemplate.getToilet();
+		
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = prop.getProperty("selectFindToilet");
+		
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, loc_y);
+			pstmt.setString(2, loc_x);
+			
+			rset = pstmt.executeQuery();
+			
+			int i = 0;
+			String[] nearToiletIdArr = LocationTemplate.getNearToiletId();
+			
+			while (rset.next()) {
+				String id = rset.getString("TOILET_ID");
+				String distance = rset.getString("DISTANCE");
+				
+				toilet.get(id).setDistance(Float.parseFloat(distance));
+				nearToiletIdArr[i++] = id;
+			}
+			
+		} catch (Exception e) {
+			throw new MainException("selectFindToilet 에러 : " + e.getMessage());
+		}
+
 	}
 }

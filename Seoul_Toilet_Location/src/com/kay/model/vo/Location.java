@@ -1,10 +1,12 @@
 package com.kay.model.vo;
 
 public class Location {
+	String siGunGuName;
 	String address;
 	String mainNum;
 	String subNum;
 	String buildingName;
+	String hangJungDongName;
 	String loc_x;
 	String loc_y;
 
@@ -17,6 +19,19 @@ public class Location {
 		this.mainNum = mainNum;
 		this.subNum = subNum;
 		this.buildingName = buildingName;
+		this.loc_x = loc_x;
+		this.loc_y = loc_y;
+	}
+
+	public Location(String siGunGuName, String address, String mainNum, String subNum, String buildingName,
+			String hangJungDongName, String loc_x, String loc_y) {
+		super();
+		this.siGunGuName = siGunGuName;
+		this.address = address;
+		this.mainNum = mainNum;
+		this.subNum = subNum;
+		this.buildingName = buildingName;
+		this.hangJungDongName = hangJungDongName;
 		this.loc_x = loc_x;
 		this.loc_y = loc_y;
 	}
@@ -69,9 +84,32 @@ public class Location {
 		this.loc_y = loc_y;
 	}
 
+	public String getSiGunGuName() {
+		return siGunGuName;
+	}
+
+	public void setSiGunGuName(String siGunGuName) {
+		this.siGunGuName = siGunGuName;
+	}
+
+	public String getHangJungDongName() {
+		return hangJungDongName;
+	}
+
+	public void setHangJungDongName(String hangJungDongName) {
+		this.hangJungDongName = hangJungDongName;
+	}
+
 	@Override
 	public String toString() {
-		return address + "\t" + mainNum + "\t" + subNum + "\t" + buildingName + "\t" + loc_x + "\t" + loc_y;
+		StringBuilder builder = new StringBuilder();
+		builder.append(siGunGuName).append("\t").append(address)
+				.append("\t").append(mainNum).append("\t").append(subNum).append("\t")
+				.append(buildingName).append("\t").append(hangJungDongName).append("\t")
+				.append(loc_x).append("\t").append(loc_y);
+		return builder.toString();
 	}
+
+	
 
 }
