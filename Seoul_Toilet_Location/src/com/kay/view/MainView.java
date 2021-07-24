@@ -1,85 +1,327 @@
 package com.kay.view;
 
-import com.kay.common.GoogleMapTemplate;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.EventQueue;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import java.awt.Color;
+import javax.swing.JList;
+import javax.swing.JRadioButton;
+import javax.swing.JTable;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
-
-import practice.advance.mvc.controller.MainController;
+import javax.swing.JButton;
+import java.awt.Font;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+import javax.swing.table.DefaultTableModel;
+import java.awt.FlowLayout;
 
 public class MainView extends JFrame {
-	private JTextField textField = new JTextField(30);
-	private JButton button = new JButton("검색");
-	private JButton optButton = new JButton("옵션");
-	private JPanel panel = new JPanel();
 
-	private JLabel googleMap = new JLabel();
-	private final JScrollPane scrollPane = new JScrollPane(googleMap);
+	private JPanel contentPane;
+	private JTable table;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
 
-	private OptionDialog dialog = null;
-
-	public MainView() {
-		setTitle("Google Maps");
-		this.setBounds(600, 300, 0, 0);
-		getContentPane().setLayout(new BorderLayout());
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		setResizable(false);
-
-		scrollPane.setPreferredSize(new Dimension(400, 400));
-
-		panel.add(textField);
-		panel.add(button);
-		panel.add(optButton);
-		button.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				GoogleMapTemplate.Map().setChanged(true);
-				ImageIcon icon = MainController.setMap(textField.getText());
-				googleMap.setIcon(icon);
-			}
-		});
-		optButton.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (dialog == null) {
-					dialog = new OptionDialog();
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-
-					dialog.addWindowListener(new WindowAdapter() {
-
-						@Override
-						public void windowClosed(WindowEvent e) {
-							if (GoogleMapTemplate.Map().isChanged()) {
-								ImageIcon icon = MainController.setMap(GoogleMapTemplate.Map().getCenter());
-								googleMap.setIcon(icon);
-							}
-							dialog = null;
-						}
-
-					});
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainView frame = new MainView();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
+	}
 
-		getContentPane().add(BorderLayout.NORTH, panel);
-
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		pack();
+	/**
+	 * Create the frame.
+	 */
+	public MainView() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(300, 100, 1024, 768);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		
+		JPanel panel2 = new JPanel();
+		panel2.setPreferredSize(new Dimension(700, 768));
+		contentPane.add(panel2, BorderLayout.CENTER);
+		panel2.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPane = new JScrollPane();
+		panel2.add(scrollPane, BorderLayout.CENTER);
+		
+		JLabel lblNewLabel = new JLabel("");
+		scrollPane.setViewportView(lblNewLabel);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setPreferredSize(new Dimension(700, 50));
+		panel2.add(panel_2, BorderLayout.NORTH);
+		panel_2.setLayout(null);
+		
+		JPanel panel_7 = new JPanel();
+//		panel_7.setBackground(Color.RED);
+		panel_7.setBounds(607, 0, 65, 40);
+		panel_2.add(panel_7);
+		panel_7.setLayout(new BorderLayout(0, 0));
+		
+		JButton btnNewButton_3 = new JButton("지형");
+		btnNewButton_3.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_7.add(btnNewButton_3, BorderLayout.CENTER);
+		
+		JPanel panel_7_1 = new JPanel();
+//		panel_7_1.setBackground(Color.RED);
+		panel_7_1.setBounds(535, 0, 65, 40);
+		panel_2.add(panel_7_1);
+		panel_7_1.setLayout(new BorderLayout(0, 0));
+		
+		JButton btnNewButton_2 = new JButton("위성");
+		btnNewButton_2.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_7_1.add(btnNewButton_2, BorderLayout.CENTER);
+		
+		JPanel panel_7_2 = new JPanel();
+//		panel_7_2.setBackground(Color.RED);
+		panel_7_2.setBounds(463, 0, 65, 40);
+		panel_2.add(panel_7_2);
+		panel_7_2.setLayout(new BorderLayout(0, 0));
+		
+		JButton btnNewButton_1 = new JButton("일반");
+		btnNewButton_1.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_7_2.add(btnNewButton_1, BorderLayout.CENTER);
+		
+		JPanel panel_8 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_8.getLayout();
+		flowLayout.setVgap(0);
+//		panel_8.setBackground(Color.YELLOW);
+		panel_8.setBounds(12, 0, 250, 40);
+		panel_2.add(panel_8);
+		
+		textField = new JTextField();
+		textField.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		textField.setText("도로명");
+		textField.setPreferredSize(new Dimension(70, 40));
+		panel_8.add(textField);
+		textField.setColumns(6);
+		
+		textField_1 = new JTextField();
+		textField_1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		textField_1.setText("본번");
+		textField_1.setPreferredSize(new Dimension(70, 40));
+		textField_1.setColumns(6);
+		panel_8.add(textField_1);
+		
+		textField_2 = new JTextField();
+		textField_2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		textField_2.setText("부번");
+		textField_2.setPreferredSize(new Dimension(70, 40));
+		textField_2.setColumns(6);
+//		textField_2.setVisible(false);
+		panel_8.add(textField_2);
+		
+		JPanel panel_9 = new JPanel();
+//		panel_9.setBackground(Color.LIGHT_GRAY);
+		panel_9.setBounds(274, 0, 60, 40);
+		panel_2.add(panel_9);
+		panel_9.setLayout(new BorderLayout(0, 0));
+		
+		JButton btnNewButton = new JButton("검색");
+		btnNewButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_9.add(btnNewButton, BorderLayout.CENTER);
+		
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("도로명 주소");
+		rdbtnNewRadioButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		rdbtnNewRadioButton.setBounds(342, 0, 121, 23);
+		panel_2.add(rdbtnNewRadioButton);
+		
+		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("좌표");
+		rdbtnNewRadioButton_1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		rdbtnNewRadioButton_1.setBounds(342, 19, 121, 23);
+		panel_2.add(rdbtnNewRadioButton_1);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setPreferredSize(new Dimension(75, 768));
+		panel2.add(panel_3, BorderLayout.EAST);
+		panel_3.setLayout(null);
+		
+		JPanel panel_4 = new JPanel();
+//		panel_4.setBackground(Color.ORANGE);
+		panel_4.setBounds(10, 10, 53, 390);
+		panel_3.add(panel_4);
+		panel_4.setLayout(new GridLayout(7, 1, 0, 2));
+		
+		JPanel panel_18 = new JPanel();
+		panel_4.add(panel_18);
+		panel_18.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_7 = new JLabel("범례");
+		lblNewLabel_7.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_18.add(lblNewLabel_7, BorderLayout.CENTER);
+		
+		JPanel panel_12 = new JPanel();
+		panel_12.setBackground(new Color(255, 0, 0));
+		panel_4.add(panel_12);
+		panel_12.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_1 = new JLabel("화장실");
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_12.add(lblNewLabel_1, BorderLayout.CENTER);
+		
+		JPanel panel_13 = new JPanel();
+		panel_13.setBackground(new Color(50, 205, 50));
+		panel_4.add(panel_13);
+		panel_13.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_2 = new JLabel("공원");
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_13.add(lblNewLabel_2, BorderLayout.CENTER);
+		
+		JPanel panel_14 = new JPanel();
+		panel_14.setBackground(new Color(255, 140, 0));
+		panel_4.add(panel_14);
+		panel_14.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_3 = new JLabel("지하철");
+		lblNewLabel_3.setForeground(new Color(255, 255, 255));
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_3.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_14.add(lblNewLabel_3, BorderLayout.CENTER);
+		
+		JPanel panel_15 = new JPanel();
+		panel_15.setBackground(new Color(30, 144, 255));
+		panel_4.add(panel_15);
+		panel_15.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_4 = new JLabel("공공시설");
+		lblNewLabel_4.setForeground(new Color(255, 255, 255));
+		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_4.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_15.add(lblNewLabel_4, BorderLayout.CENTER);
+		
+		JPanel panel_16 = new JPanel();
+		panel_16.setBackground(new Color(165, 42, 42));
+		panel_4.add(panel_16);
+		panel_16.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_5 = new JLabel("상가");
+		lblNewLabel_5.setForeground(new Color(255, 255, 255));
+		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_5.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_16.add(lblNewLabel_5, BorderLayout.CENTER);
+		
+		JPanel panel_17 = new JPanel();
+		panel_17.setBackground(new Color(0, 0, 0));
+		panel_4.add(panel_17);
+		panel_17.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_6 = new JLabel("기타");
+		lblNewLabel_6.setForeground(new Color(255, 255, 255));
+		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_6.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_17.add(lblNewLabel_6, BorderLayout.CENTER);
+		
+		JPanel panel_5 = new JPanel();
+//		panel_5.setBackground(Color.CYAN);
+		panel_5.setBounds(15, 415, 40, 40);
+		panel_3.add(panel_5);
+		panel_5.setLayout(new BorderLayout(0, 0));
+		
+		JButton btnNewButton_6 = new JButton("");
+		panel_5.add(btnNewButton_6, BorderLayout.CENTER);
+		
+		JPanel panel_6 = new JPanel();
+//		panel_6.setBackground(Color.MAGENTA);
+		panel_6.setBounds(10, 470, 53, 189);
+		panel_3.add(panel_6);
+		panel_6.setLayout(new BorderLayout(0, 0));
+		
+		JSlider slider = new JSlider();
+		slider.setOrientation(SwingConstants.VERTICAL);
+		panel_6.add(slider, BorderLayout.CENTER);
+		
+		JPanel panel_10 = new JPanel();
+		panel_10.setPreferredSize(new Dimension(25, 25));
+		panel_6.add(panel_10, BorderLayout.NORTH);
+		panel_10.setLayout(new BorderLayout(0, 0));
+		
+		JButton btnNewButton_4 = new JButton("+");
+		btnNewButton_4.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_10.add(btnNewButton_4, BorderLayout.CENTER);
+		
+		JPanel panel_11 = new JPanel();
+		panel_11.setPreferredSize(new Dimension(25, 25));
+		panel_6.add(panel_11, BorderLayout.SOUTH);
+		panel_11.setLayout(new BorderLayout(0, 0));
+		
+		JButton btnNewButton_5 = new JButton("-");
+		btnNewButton_5.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_11.add(btnNewButton_5, BorderLayout.CENTER);
+		
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension(324, 768));
+		contentPane.add(panel, BorderLayout.WEST);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBackground(Color.WHITE);
+		tabbedPane.setPreferredSize(new Dimension(324, 368));
+		panel.add(tabbedPane, BorderLayout.NORTH);
+		
+		JList list = new JList();
+		tabbedPane.addTab("결과", null, list, null);
+		
+		JList list_1 = new JList();
+		tabbedPane.addTab("전체", null, list_1, null);
+		
+		JPanel panel_1 = new JPanel();
+//		panel_1.setBackground(Color.LIGHT_GRAY);
+		panel_1.setPreferredSize(new Dimension(324, 350));
+		panel.add(panel_1, BorderLayout.SOUTH);
+		panel_1.setLayout(new BorderLayout(0, 0));
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+			},
+			new String[] {
+				"New column", "New column"
+			}
+		));
+		table.getColumnModel().getColumn(0).setPreferredWidth(114);
+		table.getColumnModel().getColumn(1).setPreferredWidth(114);
+		panel_1.add(table, BorderLayout.CENTER);
 	}
 }
