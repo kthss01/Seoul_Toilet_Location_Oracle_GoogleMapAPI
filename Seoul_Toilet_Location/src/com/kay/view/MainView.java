@@ -120,6 +120,18 @@ public class MainView extends JFrame {
 		panel_7.setLayout(new BorderLayout(0, 0));
 		
 		JButton btnNewButton_3 = new JButton("지형");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GoogleMapTemplate.Map().setChanged(true);
+				ImageIcon icon = MainController.updateMapTypeMap(GoogleMap.getMaptypes()[2]);
+				lblGoogleMap.setIcon(icon);
+				
+//				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
+				
+				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+			}
+		});
 		btnNewButton_3.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		panel_7.add(btnNewButton_3, BorderLayout.CENTER);
 		
@@ -130,6 +142,18 @@ public class MainView extends JFrame {
 		panel_7_1.setLayout(new BorderLayout(0, 0));
 		
 		JButton btnNewButton_2 = new JButton("위성");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GoogleMapTemplate.Map().setChanged(true);
+				ImageIcon icon = MainController.updateMapTypeMap(GoogleMap.getMaptypes()[3]);
+				lblGoogleMap.setIcon(icon);
+				
+//				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
+				
+				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+			}
+		});
 		btnNewButton_2.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		panel_7_1.add(btnNewButton_2, BorderLayout.CENTER);
 		
@@ -140,6 +164,18 @@ public class MainView extends JFrame {
 		panel_7_2.setLayout(new BorderLayout(0, 0));
 		
 		JButton btnNewButton_1 = new JButton("일반");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GoogleMapTemplate.Map().setChanged(true);
+				ImageIcon icon = MainController.updateMapTypeMap(GoogleMap.getMaptypes()[0]);
+				lblGoogleMap.setIcon(icon);
+				
+//				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
+				
+				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+			}
+		});
 		btnNewButton_1.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		panel_7_2.add(btnNewButton_1, BorderLayout.CENTER);
 		
@@ -182,14 +218,12 @@ public class MainView extends JFrame {
 					address = new MainController().searchXYSeoulLocation(textField.getText());
 				}
 				
-				
 				GoogleMapTemplate.Map().setChanged(true);
 //				ImageIcon icon = MainController.setMap(address);
 				ImageIcon icon = MainController.findToiletMap(address);
 				lblGoogleMap.setIcon(icon);
 				
 //				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
-				
 				
 				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
 				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);

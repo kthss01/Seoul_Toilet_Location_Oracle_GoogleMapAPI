@@ -49,6 +49,25 @@ public class MainController {
 		return icon;
 	}
 	
+	public static ImageIcon updateMapTypeMap(String maptype) {
+		Map().setMaptype(maptype);
+		
+		downloadMap();
+		ImageIcon icon = getMap();
+		fileDelete();
+		
+		return icon;
+	}
+	
+	public static ImageIcon updateZoomLevelMap(String zoomLevel) {
+		Map().setZoom(Integer.parseInt(zoomLevel));
+		
+		downloadMap();
+		ImageIcon icon = getMap();
+		fileDelete();
+		
+		return icon;
+	}
 
 	private static void updateMarker() {
 		List<Toilet> toiletList = LocationTemplate.getNearToilet();
