@@ -38,15 +38,19 @@ import javax.swing.ScrollPaneConstants;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.ButtonGroup;
+import java.awt.event.InputMethodListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MainView extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
 	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButton rdbtnNewRadioButton;
+	private JRadioButton rdbtnNewRadioButton_1;
 
 	/**
 	 * Launch the application.
@@ -154,37 +158,10 @@ public class MainView extends JFrame {
 			}
 		});
 		textField.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		textField.setText("도로명");
+		textField.setText("도로명 주소 : 서울 구 도로명 번호");
 		textField.setPreferredSize(new Dimension(70, 40));
 		panel_8.add(textField);
-		textField.setColumns(6);
-		
-		textField_1 = new JTextField();
-		textField_1.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				textField_1.setText("");
-			}
-		});
-		textField_1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		textField_1.setText("본번");
-		textField_1.setPreferredSize(new Dimension(70, 40));
-		textField_1.setColumns(6);
-		panel_8.add(textField_1);
-		
-		textField_2 = new JTextField();
-		textField_2.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				textField_2.setText("");
-			}
-		});
-		textField_2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		textField_2.setText("부번");
-		textField_2.setPreferredSize(new Dimension(70, 40));
-		textField_2.setColumns(6);
-//		textField_2.setVisible(false);
-		panel_8.add(textField_2);
+		textField.setColumns(20);
 		
 		JPanel panel_9 = new JPanel();
 //		panel_9.setBackground(Color.LIGHT_GRAY);
@@ -197,7 +174,14 @@ public class MainView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 //				System.out.println(scrollPane.getVerticalScrollBar().getValue() + " " + scrollPane.getHorizontalScrollBar().getValue());
 				
-				String address = new MainController().searchAddressSeoulLocation(textField.getText(), textField_1.getText(), textField_2.getText());
+				String address = null;
+				
+				if (rdbtnNewRadioButton.isSelected()) {
+					address = new MainController().searchAddressSeoulLocation(textField.getText());
+				} else if (rdbtnNewRadioButton_1.isSelected()) {
+					address = new MainController().searchXYSeoulLocation(textField.getText());
+				}
+				
 				
 				GoogleMapTemplate.Map().setChanged(true);
 //				ImageIcon icon = MainController.setMap(address);
@@ -214,13 +198,24 @@ public class MainView extends JFrame {
 		btnSearch.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		panel_9.add(btnSearch, BorderLayout.CENTER);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("도로명 주소");
+		rdbtnNewRadioButton = new JRadioButton("도로명 주소");
+		rdbtnNewRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textField.setText("도로명 주소 : 서울 구 도로명 번호");
+			}
+		});
+		rdbtnNewRadioButton.setSelected(true);
 		buttonGroup.add(rdbtnNewRadioButton);
 		rdbtnNewRadioButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		rdbtnNewRadioButton.setBounds(342, 0, 121, 23);
 		panel_2.add(rdbtnNewRadioButton);
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("좌표");
+		rdbtnNewRadioButton_1 = new JRadioButton("좌표");
+		rdbtnNewRadioButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textField.setText("좌표 : 위도(Lat), 경도(Lng)");
+			}
+		});
 		buttonGroup.add(rdbtnNewRadioButton_1);
 		rdbtnNewRadioButton_1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		rdbtnNewRadioButton_1.setBounds(342, 19, 121, 23);

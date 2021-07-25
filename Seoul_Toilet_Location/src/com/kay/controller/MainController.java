@@ -186,7 +186,6 @@ public class MainController {
 	
 	// 좌표 x,y 로 화장실 테이블에서 가장 가까운 화장실을 찾고 그 거리를 계산하는 함수
 	public void selectFindToilet(String loc_x, String loc_y) {
-		
 		// 서울 위치 테이블은 GRS80 좌표계로 되어있고
 		// 화장실 테이블은 WGS84 좌표계이기 때문에
 		// GRS80 -> WGS84로 좌표계 변환 필요
@@ -202,9 +201,34 @@ public class MainController {
 		}
 	}
 
-	public String searchAddressSeoulLocation(String address, String mainNum, String subNum) {
-		subNum = subNum.equals("") ? "0" : subNum;
+	public String searchAddressSeoulLocation(String address) {
+		// 서울 종로구 삼일대로19길 24 이와 같은 형태로 옴 split해서 쓸 예정
+		
+		String mainNum = address.split(" ")[3];
+		String subNum = mainNum.indexOf("-") != -1 ? mainNum.split("-")[1] : "0";
+		mainNum = mainNum.indexOf("-") != -1 ? mainNum.split("-")[0] : mainNum;
+		address = address.split(" ")[2];
 		Location location = selectAddressSeoulLocation(address, mainNum, subNum);
+		
+		System.out.println(location);
+		
+		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(location.getLoc_x()), Double.parseDouble(location.getLoc_y()));
+		String loc_x = String.format("%.6f", loc.getX());
+		String loc_y = String.format("%.6f", loc.getY());
+		
+		new MainController().selectFindToilet(location.getLoc_x(), location.getLoc_y());
+		
+		return loc_y + "," + loc_x;
+		
+		
+//		return subNum.equals("0") || subNum.equals("") ? address + " " + mainNum : address + " " + mainNum + "-" + subNum; 
+	}
+	
+	public String searchXYSeoulLocation(String address) {
+		// 37.56970320467521, 126.96665458339758 와 같은 형태로 옴
+		
+		String[] xy = address.split(", ");
+		Location location = selectXYSeoulLocation(xy[0], xy[1]);
 		
 		System.out.println(location);
 		
