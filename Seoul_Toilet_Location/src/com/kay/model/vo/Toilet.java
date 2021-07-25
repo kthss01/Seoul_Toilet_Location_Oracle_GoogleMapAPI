@@ -1,9 +1,81 @@
 package com.kay.model.vo;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.kay.model.exception.MainException;
 
 public class Toilet {
+	
+	private final static Map<String, String> COLOR_MAP = new HashMap<String, String>() {
+		{
+			put("화장실", GoogleMap.getLegendColor()[0]);
+			put("공원", GoogleMap.getLegendColor()[1]);
+			put("지하철", GoogleMap.getLegendColor()[2]);
+			put("공공시설", GoogleMap.getLegendColor()[3]);
+			put("상가", GoogleMap.getLegendColor()[4]);
+			put("기타", GoogleMap.getLegendColor()[5]);
+		}
+	};
+	
+	private final static Map<String, String> LEGEND_MAP = new HashMap<String, String>() {
+		{
+			// 화장실
+			put("화장실", "화장실"); 
+			put("공중화장실", "화장실"); 
+			put("개방화장실", "화장실");
+			
+			// 공원
+			put("근린공원", "공원");
+			put("공원", "공원");
+			
+			// 지하철
+			put("지하철", "지하철");
+			put("철도역", "지하철");
+			
+			// 공공시설
+			put("전시관", "공공시설");
+			put("공용시설", "공공시설");
+			put("체육시설", "공공시설");
+			put("도서관", "공공시설");
+			put("공공시설", "공공시설");
+			put("박물관", "공공시설");
+			put("학교", "공공시설");
+			put("대학교", "공공시설");
+			put("공공청사(임시)", "공공시설");
+			put("병원", "공공시설");
+			put("문화시설", "공공시설");
+			put("공공청사", "공공시설");
+			put("공공기관", "공공시설");
+			
+			// 상가
+			put("상가(전통시장)", "상가");
+			put("시장(상가)", "상가");
+			put("전통시장", "상가");
+			put("재래시장", "상가");
+			put("상가", "상가");
+			put("상가(재래시장)", "상가");
+			put("민간", "상가");
+			put("음식점", "상가");
+			put("지하상가", "상가");
+			put("상가(시장)", "상가");
+			
+			// 기타
+			put("빌딩", "기타");
+			put("장례식장", "기타");
+			put("예식장", "기타");
+			put("택시회사", "기타");
+			put("기타", "기타");
+			put("정교시설", "기타");
+			put("종교시설", "기타");
+			put("주차장", "기타");
+			put("교통시설", "기타");
+			put("주유소및충전소", "기타");
+			put("교회", "기타");
+			put("아크릴전문기업", "기타");
+		}
+	};
+	
 	private float distance;
 	private String id;
 	private String useable;
@@ -26,6 +98,9 @@ public class Toilet {
 	private String detailContent4;
 	private String detailName5;
 	private String detailContent5;
+	
+	private String kind; // 시설구분 화장실 | 공원 | 지하철 | 공공시설 | 상가 | 기타 중 하나
+	private String color; // 시설구분에 따른 마커 색깔
 
 	public Toilet() {
 	}
@@ -33,8 +108,8 @@ public class Toilet {
 	public Toilet(String id, String useable, String locationName, String usingTime, String guName,
 			String roadAddress, String numAddress, String locX, String locY, String phone, String detailName1,
 			String datailContent1, String detailName2, String datailContent2, String detailName3, String datailContent3,
-			String detailName4, String datailContent4, String detailName5, String datailContent5) {
-		super();
+			String detailName4, String datailContent4, String detailName5, String datailContent5) throws MainException {
+		this();
 		this.distance = -1;
 		this.id = id;
 		this.useable = useable;
@@ -56,6 +131,31 @@ public class Toilet {
 		this.detailContent4 = datailContent4;
 		this.detailName5 = detailName5;
 		this.detailContent5 = datailContent5;
+		
+		this.kind = findKind();
+		this.color = findColor();
+//		System.out.println(kind + " " + color);
+	}
+
+	private String findColor() {
+		return COLOR_MAP.get(kind);
+	}
+
+	private String findKind() throws MainException {
+				
+		if (detailName3 == null && detailName1 == null && detailName2 == null)
+			throw new MainException("Toilet find Kind 에러: " + locationName);
+		
+		if (detailName3.equals("소재지용도")) {
+			return LEGEND_MAP.get(detailContent3);
+		} else if (detailName1.equals("시설구분")) {
+			return LEGEND_MAP.get(detailContent1);
+		} else if (detailName2.equals("시설구분")){
+			return LEGEND_MAP.get(detailContent2);
+		}
+		
+		System.out.println(locationName + " : 범례 찾지 못함!");
+		return "미확인";
 	}
 
 	public float getDistance() {
@@ -254,6 +354,30 @@ public class Toilet {
 				.append("\t").append(detailContent4).append("\t").append(detailName5)
 				.append("\t").append(detailContent5);
 		return builder.toString();
+	}
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
+	public static Map<String, String> getColorMap() {
+		return COLOR_MAP;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public static Map<String, String> getLegendMap() {
+		return LEGEND_MAP;
 	}
 
 	

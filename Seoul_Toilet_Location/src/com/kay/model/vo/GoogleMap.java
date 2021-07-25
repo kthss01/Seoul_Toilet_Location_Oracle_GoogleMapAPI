@@ -18,7 +18,11 @@ public class GoogleMap {
 			"gray", "orange", "red", "white" };
 
 	private static ArrayList<String> markerLabel;
-
+	
+	private final static String[] LEGEND_COLOR = new String[] {
+			"0xED315D", "0x7CA960", "0x06D6A0", "0x7BD4F4", "0xFFD166", "0x37433D"
+	};
+	
 	private String key;
 
 	private boolean isChanged; // 상태 변화시 체크
@@ -45,12 +49,14 @@ public class GoogleMap {
 		markers = new Markers();
 
 		markerLabel = new ArrayList<String>();
-		for (int i = 0; i < 26; i++) {
-			markerLabel.add(String.valueOf((char) ('A' + i)));
-		}
 		for (int i = 0; i < 10; i++) {
 			markerLabel.add(String.valueOf(i));
 		}
+		
+		for (int i = 0; i < 26; i++) {
+			markerLabel.add(String.valueOf((char) ('A' + i)));
+		}
+		
 	}
 
 	private void readKey(String path) {
@@ -76,6 +82,10 @@ public class GoogleMap {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.maptype = maptype;
+	}
+
+	public static String[] getLegendColor() {
+		return LEGEND_COLOR;
 	}
 
 	public static String[] getMarkerLabel() {

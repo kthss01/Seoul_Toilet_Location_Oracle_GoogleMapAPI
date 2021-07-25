@@ -30,11 +30,14 @@ import javax.swing.table.DefaultTableModel;
 
 import com.kay.controller.MainController;
 
+import com.kay.model.vo.GoogleMap;
+
 import com.kay.common.GoogleMapTemplate;
 
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.ButtonGroup;
 
 public class MainView extends JFrame {
 
@@ -43,6 +46,7 @@ public class MainView extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 
 	/**
 	 * Launch the application.
@@ -211,11 +215,13 @@ public class MainView extends JFrame {
 		panel_9.add(btnSearch, BorderLayout.CENTER);
 		
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("도로명 주소");
+		buttonGroup.add(rdbtnNewRadioButton);
 		rdbtnNewRadioButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		rdbtnNewRadioButton.setBounds(342, 0, 121, 23);
 		panel_2.add(rdbtnNewRadioButton);
 		
 		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("좌표");
+		buttonGroup.add(rdbtnNewRadioButton_1);
 		rdbtnNewRadioButton_1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		rdbtnNewRadioButton_1.setBounds(342, 19, 121, 23);
 		panel_2.add(rdbtnNewRadioButton_1);
@@ -232,6 +238,7 @@ public class MainView extends JFrame {
 		panel_4.setLayout(new GridLayout(7, 1, 0, 2));
 		
 		JPanel panel_18 = new JPanel();
+		panel_18.setBackground(Color.WHITE);
 		panel_4.add(panel_18);
 		panel_18.setLayout(new BorderLayout(0, 0));
 		
@@ -241,7 +248,8 @@ public class MainView extends JFrame {
 		panel_18.add(lblNewLabel_7, BorderLayout.CENTER);
 		
 		JPanel panel_12 = new JPanel();
-		panel_12.setBackground(new Color(255, 0, 0));
+//		panel_12.setBackground(new Color(255, 0, 0));
+		panel_12.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[0]));
 		panel_4.add(panel_12);
 		panel_12.setLayout(new BorderLayout(0, 0));
 		
@@ -252,7 +260,8 @@ public class MainView extends JFrame {
 		panel_12.add(lblNewLabel_1, BorderLayout.CENTER);
 		
 		JPanel panel_13 = new JPanel();
-		panel_13.setBackground(new Color(50, 205, 50));
+//		panel_13.setBackground(new Color(50, 205, 50));
+		panel_13.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[1]));
 		panel_4.add(panel_13);
 		panel_13.setLayout(new BorderLayout(0, 0));
 		
@@ -263,7 +272,8 @@ public class MainView extends JFrame {
 		panel_13.add(lblNewLabel_2, BorderLayout.CENTER);
 		
 		JPanel panel_14 = new JPanel();
-		panel_14.setBackground(new Color(255, 140, 0));
+//		panel_14.setBackground(new Color(255, 140, 0));
+		panel_14.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[2]));
 		panel_4.add(panel_14);
 		panel_14.setLayout(new BorderLayout(0, 0));
 		
@@ -274,7 +284,8 @@ public class MainView extends JFrame {
 		panel_14.add(lblNewLabel_3, BorderLayout.CENTER);
 		
 		JPanel panel_15 = new JPanel();
-		panel_15.setBackground(new Color(30, 144, 255));
+//		panel_15.setBackground(new Color(30, 144, 255));
+		panel_15.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[3]));
 		panel_4.add(panel_15);
 		panel_15.setLayout(new BorderLayout(0, 0));
 		
@@ -285,7 +296,8 @@ public class MainView extends JFrame {
 		panel_15.add(lblNewLabel_4, BorderLayout.CENTER);
 		
 		JPanel panel_16 = new JPanel();
-		panel_16.setBackground(new Color(165, 42, 42));
+//		panel_16.setBackground(new Color(165, 42, 42));
+		panel_16.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[4]));
 		panel_4.add(panel_16);
 		panel_16.setLayout(new BorderLayout(0, 0));
 		
@@ -296,7 +308,8 @@ public class MainView extends JFrame {
 		panel_16.add(lblNewLabel_5, BorderLayout.CENTER);
 		
 		JPanel panel_17 = new JPanel();
-		panel_17.setBackground(new Color(0, 0, 0));
+//		panel_17.setBackground(new Color(0, 0, 0));
+		panel_17.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[5]));
 		panel_4.add(panel_17);
 		panel_17.setLayout(new BorderLayout(0, 0));
 		

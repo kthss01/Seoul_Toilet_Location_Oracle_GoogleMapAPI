@@ -1,5 +1,6 @@
 package com.kay.common;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -56,5 +57,29 @@ public class GoogleMapTemplate {
 	public static void fileDelete() {
 		File f = new File(map.getCenter());
 		f.delete();
+	}
+	
+	/**
+	 * Converts a hex string to a color. If it can't be converted null is returned.
+	 * @param hex (i.e. #CCCCCCFF or CCCCCC)
+	 * @return Color
+	 */
+	public static Color HexToColor(String hex) 
+	{
+	    hex = hex.replace("0x", "");
+	    switch (hex.length()) {
+	        case 6:
+	            return new Color(
+	            Integer.valueOf(hex.substring(0, 2), 16),
+	            Integer.valueOf(hex.substring(2, 4), 16),
+	            Integer.valueOf(hex.substring(4, 6), 16));
+	        case 8:
+	            return new Color(
+	            Integer.valueOf(hex.substring(0, 2), 16),
+	            Integer.valueOf(hex.substring(2, 4), 16),
+	            Integer.valueOf(hex.substring(4, 6), 16),
+	            Integer.valueOf(hex.substring(6, 8), 16));
+	    }
+	    return null;
 	}
 }

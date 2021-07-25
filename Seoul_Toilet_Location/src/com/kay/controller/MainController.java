@@ -12,8 +12,10 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import com.kay.common.GoogleMapTemplate;
 import com.kay.common.LocationTemplate;
 import com.kay.model.exception.MainException;
+import com.kay.model.vo.GoogleMap;
 import com.kay.model.vo.Location;
 import com.kay.model.vo.Marker;
 import com.kay.model.vo.Toilet;
@@ -38,11 +40,7 @@ public class MainController {
 		Map().getMarkers().getMarkers().clear();
 		Map().getMarkers().getMarkers().add(new Marker(address));
 		
-		List<Toilet> toiletList = LocationTemplate.getNearToilet();
-		for (Toilet toilet : toiletList) {
-			System.out.println(toilet);
-			Map().getMarkers().addMarker(new Marker("mid", "red", "A", toilet.getLocation()));
-		}
+		updateMarker();
 		
 		downloadMap();
 		ImageIcon icon = getMap();
@@ -51,6 +49,21 @@ public class MainController {
 		return icon;
 	}
 	
+
+	private static void updateMarker() {
+		List<Toilet> toiletList = LocationTemplate.getNearToilet();
+		for (int i=0; i < toiletList.size(); i++) {
+			Toilet toilet = toiletList.get(i);
+			System.out.println(toilet);
+			
+			String size = "mid";
+			String color = toilet.getColor();
+			String label = GoogleMap.getMarkerLabel()[i+1];
+			
+			Map().getMarkers().addMarker(new Marker(size, color, label, toilet.getLocation()));
+		}
+		
+	}
 
 	public static void addMarker(String location, String size, String color, String label) {
 

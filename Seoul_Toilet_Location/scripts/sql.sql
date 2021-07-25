@@ -404,10 +404,11 @@ SELECT * FROM TOILET_VIEW WHERE DETAIL_NAME3 = '소재지용도' AND DETAIL_CONT
 SELECT * FROM TOILET_VIEW WHERE DETAIL_NAME3 = '소재지용도' AND DETAIL_CONTENT3 = '주유소및충전소'; -- 549개
 
 -- 분류 우선순위 및 최종 화장실 | 공원 | 지하철 | 공공시설 | 상가 | 기타
--- 화장실 : 화장실 공중화장실
+-- ()는 소재지용도가 아닌 시설구분 쪽 좀 다른거
+-- 화장실 : 화장실 공중화장실 (개방화장실)
 -- 공원 : 근린공원 공원
 -- 지하철 : 지하철 철도역
--- 공공시설 : 전시관 공용시설 체육시설 도서관 공공시설 박물관 학교 대학교 공공청사(임시) 병원 문화시설 공공청사
+-- 공공시설 : 전시관 공용시설 체육시설 도서관 공공시설 박물관 학교 대학교 공공청사(임시) 병원 문화시설 공공청사 (공공기관)
 -- 상가 : 상가(전통시장) 시장(상가) 전통시장 재래시장 상가 상가(재래시장) 민간 음식점 지하상가 상가(시장)
 -- 기타 : 빌딩 장례식장 예식장 택시회사 기타 정교시설 종교시설 주차장 교통시설 주유소및충전소 교회 아크릴전문기업
 
@@ -422,5 +423,31 @@ SELECT * FROM TOILET_VIEW WHERE DETAIL_NAME1 = '시설구분';
 SELECT COUNT(*) FROM TOILET_VIEW WHERE DETAIL_NAME1 = '시설구분'; -- 70개
 SELECT * FROM TOILET_VIEW WHERE DETAIL_NAME2 = '시설구분';
 
-SELECT * FROM TOILET_VIEW WHERE DETAIL_NAME3 != '소재지용도';
+SELECT * FROM TOILET_VIEW WHERE DETAIL_NAME3 != '소재지용도'; -- 3건은 DETAIL_NAME2 에 시설구분이 있고 공중화장실임
 SELECT COUNT(*) FROM TOILET_VIEW WHERE DETAIL_NAME3 != '소재지용도'; -- 67개
+
+SELECT DETAIL_CONTENT1 FROM TOILET_VIEW WHERE DETAIL_NAME3 != '소재지용도' AND DETAIL_NAME1 = '시설구분' GROUP BY DETAIL_CONTENT1; -- 기타 | 공공기관 | 병원 | 개방화장실 | 공중화장실 | 공원
+
+SELECT * FROM TOILET_VIEW WHERE LOCATION_NAME = 'SK합정주유소'; -- 모든 값 NULL임 DETAIL_NAME3 소재지용도 로 변경하고 DETAIL_CONTENT3 주유소및충전소 로 변경하자
+UPDATE TOILET_VIEW SET DETAIL_NAME3 = '소재지용도', DETAIL_CONTENT3 = '주유소및충전소' WHERE LOCATION_NAME = 'SK합정주유소';
+
+COMMIT;
+
+SELECT * FROM TOILET_VIEW WHERE LOCATION_NAME = '망원시장 공중화장실'; -- 이것도 NULL 임 좀 찾아볼 필요가 있어보임
+SELECT * FROM TOILET_VIEW WHERE DETAIL_NAME1 IS NULL OR DETAIL_NAME3 IS NULL; -- 총 7개 다 처리해두록 하자 
+--SK합정주유소
+--망원시장 공중화장실
+--서강한화오벨리스크
+--마포 양촌리
+--상도근린공원
+--중소기업DMC타워
+--인수동 자치회관
+
+UPDATE TOILET_VIEW SET DETAIL_NAME3 = '소재지용도', DETAIL_CONTENT3 = '공중화장실' WHERE LOCATION_NAME = '망원시장 공중화장실';
+UPDATE TOILET_VIEW SET DETAIL_NAME3 = '소재지용도', DETAIL_CONTENT3 = '빌딩' WHERE LOCATION_NAME = '서강한화오벨리스크';
+UPDATE TOILET_VIEW SET DETAIL_NAME3 = '소재지용도', DETAIL_CONTENT3 = '공용시설' WHERE LOCATION_NAME = '마포 양촌리';
+UPDATE TOILET_VIEW SET DETAIL_NAME3 = '소재지용도', DETAIL_CONTENT3 = '근린공원' WHERE LOCATION_NAME = '상도근린공원';
+UPDATE TOILET_VIEW SET DETAIL_NAME3 = '소재지용도', DETAIL_CONTENT3 = '빌딩' WHERE LOCATION_NAME = '중소기업DMC타워';
+UPDATE TOILET_VIEW SET DETAIL_NAME3 = '소재지용도', DETAIL_CONTENT3 = '공용시설' WHERE LOCATION_NAME = '인수동 자치회관';
+
+COMMIT;
