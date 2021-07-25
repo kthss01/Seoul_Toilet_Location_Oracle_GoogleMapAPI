@@ -7,6 +7,7 @@ import static com.kay.common.GoogleMapTemplate.getMap;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -23,13 +24,33 @@ public class MainController {
 	public static ImageIcon setMap(String location) {
 		if (!location.equals(""))
 			Map().setCenter(location);
-
+		
 		downloadMap();
 		ImageIcon icon = getMap();
 		fileDelete();
-
+		
 		return icon;
 	}
+	
+	public static ImageIcon findToiletMap(String address) {
+		
+		Map().setCenter(address);
+		Map().getMarkers().getMarkers().clear();
+		Map().getMarkers().getMarkers().add(new Marker(address));
+		
+		List<Toilet> toiletList = LocationTemplate.getNearToilet();
+		for (Toilet toilet : toiletList) {
+			System.out.println(toilet);
+			Map().getMarkers().addMarker(new Marker("mid", "red", "A", toilet.getLocation()));
+		}
+		
+		downloadMap();
+		ImageIcon icon = getMap();
+		fileDelete();
+		
+		return icon;
+	}
+	
 
 	public static void addMarker(String location, String size, String color, String label) {
 
@@ -157,6 +178,7 @@ public class MainController {
 		// 화장실 테이블은 WGS84 좌표계이기 때문에
 		// GRS80 -> WGS84로 좌표계 변환 필요
 		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(loc_x), Double.parseDouble(loc_y));
+		
 		loc_x = String.valueOf(loc.getX());
 		loc_y = String.valueOf(loc.getY());
 		
@@ -165,5 +187,23 @@ public class MainController {
 		} catch (MainException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	public String searchAddressSeoulLocation(String address, String mainNum, String subNum) {
+		subNum = subNum.equals("") ? "0" : subNum;
+		Location location = selectAddressSeoulLocation(address, mainNum, subNum);
+		
+		System.out.println(location);
+		
+		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(location.getLoc_x()), Double.parseDouble(location.getLoc_y()));
+		String loc_x = String.format("%.6f", loc.getX());
+		String loc_y = String.format("%.6f", loc.getY());
+		
+		new MainController().selectFindToilet(location.getLoc_x(), location.getLoc_y());
+		
+		return loc_y + "," + loc_x;
+		
+		
+//		return subNum.equals("0") || subNum.equals("") ? address + " " + mainNum : address + " " + mainNum + "-" + subNum; 
 	}
 }

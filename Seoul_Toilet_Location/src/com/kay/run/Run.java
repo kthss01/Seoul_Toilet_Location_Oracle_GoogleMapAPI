@@ -21,12 +21,12 @@ public class Run {
 //		System.out.println(map.size());
 		
 		// 도로명 주소, 건물본번, 건물부번 입력받아 서울 위치 테이블에서 가져오기
-		System.out.println("도로명 주소, 건물본번, 건물부번 입력받아 서울 위치 테이블에서 가져오기");
-		String address = "자하문로";
-		String mainNum = "94";
-		String subNum = "0";
-		Location location = new MainController().selectAddressSeoulLocation(address, mainNum, subNum);
-		System.out.println(location);
+//		System.out.println("도로명 주소, 건물본번, 건물부번 입력받아 서울 위치 테이블에서 가져오기");
+//		String address = "자하문로";
+//		String mainNum = "94";
+//		String subNum = "0";
+//		Location location = new MainController().selectAddressSeoulLocation(address, mainNum, subNum);
+//		System.out.println(location);
 		
 		// 서울 위치 테이블에서 해당 좌표와 가장 가까운 위치 가져오기
 		System.out.println("서울 위치 테이블에서 해당 좌표와 가장 가까운 위치 가져오기");
@@ -34,8 +34,12 @@ public class Run {
 //		String loc_x = "37.57185863552551";
 //		String loc_y = "126.99885096392968";
 		// 37.570422342703516, 126.9888591131944
-		String loc_x = "37.570422342703516";
-		String loc_y = "126.9888591131944";
+//		String loc_x = "37.570422342703516";
+//		String loc_y = "126.9888591131944";
+//		37.434982,126.903401
+//		37.577923260323274, 127.00157376223095
+		String loc_x = "37.577923260323274";
+		String loc_y = "127.00157376223095";
 		Location location2 = new MainController().selectXYSeoulLocation(loc_x, loc_y);
 		System.out.println(location2);
 		

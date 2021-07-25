@@ -12,6 +12,13 @@ public class Marker {
 	public Marker() {
 	}
 
+	public Marker(String location) {
+		size = "mid";
+		this.color = "white";
+//		label = "A";
+		locations.add(location);
+	}
+	
 	public Marker(String size, String color, String label, String location) {
 		super();
 		this.size = size;

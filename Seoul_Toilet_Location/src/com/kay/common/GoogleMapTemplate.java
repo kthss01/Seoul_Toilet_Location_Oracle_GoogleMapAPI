@@ -17,7 +17,7 @@ public class GoogleMapTemplate {
 	public static GoogleMap Map() {
 		if (map == null) {
 			map = new GoogleMap();
-			map.sample();
+			map.initMap();
 		}
 		return map;
 	}

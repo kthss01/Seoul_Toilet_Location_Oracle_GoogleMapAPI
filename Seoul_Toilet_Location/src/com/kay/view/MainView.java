@@ -1,28 +1,40 @@
 package com.kay.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import java.awt.Color;
-import javax.swing.JList;
-import javax.swing.JRadioButton;
-import javax.swing.JTable;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.Font;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import javax.swing.table.DefaultTableModel;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import com.kay.controller.MainController;
+
+import com.kay.common.GoogleMapTemplate;
+
+import javax.swing.ScrollPaneConstants;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class MainView extends JFrame {
 
@@ -67,9 +79,27 @@ public class MainView extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		panel2.add(scrollPane, BorderLayout.CENTER);
 		
-		JLabel lblNewLabel = new JLabel("");
-		scrollPane.setViewportView(lblNewLabel);
+		JLabel lblGoogleMap = new JLabel("");
+		lblGoogleMap.setPreferredSize(new Dimension(GoogleMapTemplate.Map().getSizeX(), GoogleMapTemplate.Map().getSizeY()));
+		scrollPane.setViewportView(lblGoogleMap);
 		
+//		Thread thread = new Thread(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				System.out.println("초기 맵 설정 스레드 시작");
+//				
+//				GoogleMapTemplate.Map().setChanged(true);
+//				ImageIcon icon = MainController.setMap(GoogleMapTemplate.Map().getCenter());
+//				lblGoogleMap.setIcon(icon);
+//				
+//				System.out.println("초기 맵 설정 완료");
+//			}
+//		});
+//		
+//		thread.start();
+
+			
 		JPanel panel_2 = new JPanel();
 		panel_2.setPreferredSize(new Dimension(700, 50));
 		panel2.add(panel_2, BorderLayout.NORTH);
@@ -113,6 +143,12 @@ public class MainView extends JFrame {
 		panel_2.add(panel_8);
 		
 		textField = new JTextField();
+		textField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				textField.setText("");
+			}
+		});
 		textField.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		textField.setText("도로명");
 		textField.setPreferredSize(new Dimension(70, 40));
@@ -120,6 +156,12 @@ public class MainView extends JFrame {
 		textField.setColumns(6);
 		
 		textField_1 = new JTextField();
+		textField_1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				textField_1.setText("");
+			}
+		});
 		textField_1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		textField_1.setText("본번");
 		textField_1.setPreferredSize(new Dimension(70, 40));
@@ -127,6 +169,12 @@ public class MainView extends JFrame {
 		panel_8.add(textField_1);
 		
 		textField_2 = new JTextField();
+		textField_2.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				textField_2.setText("");
+			}
+		});
 		textField_2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		textField_2.setText("부번");
 		textField_2.setPreferredSize(new Dimension(70, 40));
@@ -140,9 +188,27 @@ public class MainView extends JFrame {
 		panel_2.add(panel_9);
 		panel_9.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnNewButton = new JButton("검색");
-		btnNewButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_9.add(btnNewButton, BorderLayout.CENTER);
+		JButton btnSearch = new JButton("검색");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				System.out.println(scrollPane.getVerticalScrollBar().getValue() + " " + scrollPane.getHorizontalScrollBar().getValue());
+				
+				String address = new MainController().searchAddressSeoulLocation(textField.getText(), textField_1.getText(), textField_2.getText());
+				
+				GoogleMapTemplate.Map().setChanged(true);
+//				ImageIcon icon = MainController.setMap(address);
+				ImageIcon icon = MainController.findToiletMap(address);
+				lblGoogleMap.setIcon(icon);
+				
+//				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
+				
+				
+				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+			}
+		});
+		btnSearch.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_9.add(btnSearch, BorderLayout.CENTER);
 		
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("도로명 주소");
 		rdbtnNewRadioButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
@@ -322,6 +388,6 @@ public class MainView extends JFrame {
 		));
 		table.getColumnModel().getColumn(0).setPreferredWidth(114);
 		table.getColumnModel().getColumn(1).setPreferredWidth(114);
-		panel_1.add(table, BorderLayout.CENTER);
+		panel_1.add(table, BorderLayout.CENTER);	
 	}
 }

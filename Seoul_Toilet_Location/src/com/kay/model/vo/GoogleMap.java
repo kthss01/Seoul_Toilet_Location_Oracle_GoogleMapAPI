@@ -155,10 +155,10 @@ public class GoogleMap {
 		this.isChanged = isChanged;
 	}
 
-	public void sample() {
-		zoom = 12;
-		sizeX = 512;
-		sizeY = 512;
+	public void initMap() {
+		zoom = 15;
+		sizeX = 1024;
+		sizeY = 1024;
 		isChanged = true;
 		center = "서울";
 	}

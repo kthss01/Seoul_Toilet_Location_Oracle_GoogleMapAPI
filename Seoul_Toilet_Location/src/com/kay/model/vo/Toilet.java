@@ -1,5 +1,8 @@
 package com.kay.model.vo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class Toilet {
 	private float distance;
 	private String id;
@@ -223,6 +226,20 @@ public class Toilet {
 		this.detailContent5 = datailContent5;
 	}
 
+	public String getLocation() {
+		String str = String.format("%.6f,%.6f", Double.parseDouble(locY), Double.parseDouble(locX));
+		
+		return str;
+		
+//		try {
+//			return URLEncoder.encode(str, "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return null;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
