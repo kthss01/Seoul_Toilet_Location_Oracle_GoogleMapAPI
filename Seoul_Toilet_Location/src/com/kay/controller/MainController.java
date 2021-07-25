@@ -59,8 +59,8 @@ public class MainController {
 		return icon;
 	}
 	
-	public static ImageIcon updateZoomLevelMap(String zoomLevel) {
-		Map().setZoom(Integer.parseInt(zoomLevel));
+	public static ImageIcon updateZoomLevelMap(int zoomLevel) {
+		Map().setZoom(zoomLevel);
 		
 		downloadMap();
 		ImageIcon icon = getMap();

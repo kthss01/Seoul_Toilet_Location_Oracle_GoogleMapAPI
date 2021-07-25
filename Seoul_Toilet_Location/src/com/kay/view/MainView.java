@@ -42,6 +42,10 @@ import java.awt.event.InputMethodListener;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainView extends JFrame {
 
@@ -355,6 +359,18 @@ public class MainView extends JFrame {
 		panel_5.setLayout(new BorderLayout(0, 0));
 		
 		JButton btnNewButton_6 = new JButton("");
+		btnNewButton_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GoogleMapTemplate.Map().setChanged(true);
+				ImageIcon icon = MainController.updateZoomLevelMap(15); // 기본값이라 15로 가정
+				lblGoogleMap.setIcon(icon);
+				
+//				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
+				
+				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+			}
+		});
 		panel_5.add(btnNewButton_6, BorderLayout.CENTER);
 		
 		JPanel panel_6 = new JPanel();
@@ -364,7 +380,27 @@ public class MainView extends JFrame {
 		panel_6.setLayout(new BorderLayout(0, 0));
 		
 		JSlider slider = new JSlider();
+		slider.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				GoogleMapTemplate.Map().setChanged(true);
+				ImageIcon icon = MainController.updateZoomLevelMap(slider.getValue());
+				lblGoogleMap.setIcon(icon);
+				
+//				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
+				
+				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+			}
+		});
+		slider.setPaintTicks(true);
+		slider.setMinorTickSpacing(1);
+		slider.setMajorTickSpacing(5);
+		slider.setMaximum(20);
+		slider.setMinimum(1);
+		slider.setValue(GoogleMapTemplate.Map().getZoom());
 		slider.setOrientation(SwingConstants.VERTICAL);
+		
 		panel_6.add(slider, BorderLayout.CENTER);
 		
 		JPanel panel_10 = new JPanel();
@@ -373,6 +409,20 @@ public class MainView extends JFrame {
 		panel_10.setLayout(new BorderLayout(0, 0));
 		
 		JButton btnNewButton_4 = new JButton("+");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				slider.setValue(slider.getValue() + 1);
+
+				GoogleMapTemplate.Map().setChanged(true);
+				ImageIcon icon = MainController.updateZoomLevelMap(slider.getValue());
+				lblGoogleMap.setIcon(icon);
+				
+//				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
+				
+				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+			}
+		});
 		btnNewButton_4.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		panel_10.add(btnNewButton_4, BorderLayout.CENTER);
 		
@@ -382,6 +432,20 @@ public class MainView extends JFrame {
 		panel_11.setLayout(new BorderLayout(0, 0));
 		
 		JButton btnNewButton_5 = new JButton("-");
+		btnNewButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				slider.setValue(slider.getValue() - 1);
+
+				GoogleMapTemplate.Map().setChanged(true);
+				ImageIcon icon = MainController.updateZoomLevelMap(slider.getValue());
+				lblGoogleMap.setIcon(icon);
+				
+//				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
+				
+				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+			}
+		});
 		btnNewButton_5.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		panel_11.add(btnNewButton_5, BorderLayout.CENTER);
 		
