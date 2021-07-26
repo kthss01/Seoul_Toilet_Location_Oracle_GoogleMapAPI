@@ -77,6 +77,8 @@ public class Toilet {
 	};
 	
 	private float distance;
+	private String markerLabel;
+	
 	private String id;
 	private String useable;
 	private String locationName;
@@ -378,6 +380,14 @@ public class Toilet {
 
 	public static Map<String, String> getLegendMap() {
 		return LEGEND_MAP;
+	}
+
+	public String getMarkerLabel() {
+		return markerLabel;
+	}
+
+	public void setMarkerLabel(String markerLabel) {
+		this.markerLabel = markerLabel;
 	}
 
 	

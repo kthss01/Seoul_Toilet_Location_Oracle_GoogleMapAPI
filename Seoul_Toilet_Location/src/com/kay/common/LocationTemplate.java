@@ -8,6 +8,7 @@ import java.util.Map;
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
 import com.kay.controller.MainController;
+import com.kay.model.vo.GoogleMap;
 import com.kay.model.vo.Toilet;
 
 public class LocationTemplate {
@@ -43,8 +44,11 @@ public class LocationTemplate {
 		
 		String[] nearToiletIdArr = getNearToiletId();
 		
+		int i = 1;
 		for (String toiletId : nearToiletIdArr) {
-			list.add(toiletMap.get(toiletId));
+			Toilet toilet = toiletMap.get(toiletId);
+			toilet.setMarkerLabel(GoogleMap.getMarkerLabel()[i++]);
+			list.add(toilet);
 		}
 		
 		return list;

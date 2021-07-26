@@ -77,7 +77,7 @@ public class MainController {
 			
 			String size = "mid";
 			String color = toilet.getColor();
-			String label = GoogleMap.getMarkerLabel()[i+1];
+			String label = toilet.getMarkerLabel();
 			
 			Map().getMarkers().addMarker(new Marker(size, color, label, toilet.getLocation()));
 		}
@@ -249,17 +249,26 @@ public class MainController {
 		// 37.56970320467521, 126.96665458339758 와 같은 형태로 옴
 		
 		String[] xy = address.split(", ");
-		Location location = selectXYSeoulLocation(xy[0], xy[1]);
+//		Location location = selectXYSeoulLocation(xy[0], xy[1]);
+//		
+//		System.out.println(location);
+//		
+//		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(location.getLoc_x()), Double.parseDouble(location.getLoc_y()));
+//		String loc_x = String.format("%.6f", loc.getX());
+//		String loc_y = String.format("%.6f", loc.getY());
+//		
+//		new MainController().selectFindToilet(location.getLoc_x(), location.getLoc_y());
+
+		Point2D.Double loc = LocationTemplate.getTransformWGSToGRS(Double.parseDouble(xy[1]), Double.parseDouble(xy[0]));
+		String loc_x = String.valueOf(loc.getX());
+		String loc_y = String.valueOf(loc.getY());
 		
-		System.out.println(location);
+		new MainController().selectFindToilet(loc_x, loc_y);
 		
-		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(location.getLoc_x()), Double.parseDouble(location.getLoc_y()));
-		String loc_x = String.format("%.6f", loc.getX());
-		String loc_y = String.format("%.6f", loc.getY());
+		loc_x = String.format("%.6f", Double.parseDouble(xy[0]));
+		loc_y = String.format("%.6f", Double.parseDouble(xy[1]));
 		
-		new MainController().selectFindToilet(location.getLoc_x(), location.getLoc_y());
-		
-		return loc_y + "," + loc_x;
+		return loc_x + "," + loc_y;
 		
 		
 //		return subNum.equals("0") || subNum.equals("") ? address + " " + mainNum : address + " " + mainNum + "-" + subNum; 

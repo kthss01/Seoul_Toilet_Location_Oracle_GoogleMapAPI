@@ -42,6 +42,7 @@ import com.kay.common.LocationTemplate;
 import com.kay.controller.MainController;
 import com.kay.model.vo.GoogleMap;
 import com.kay.model.vo.Toilet;
+import javax.swing.ListSelectionModel;
 
 public class MainView extends JFrame {
 
@@ -51,8 +52,9 @@ public class MainView extends JFrame {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton rdbtnNewRadioButton;
 	private JRadioButton rdbtnNewRadioButton_1;
-	private ToiletRenderer toiletRender;
+	private TotalToiletRenderer totalToiletRender;
 	private DefaultListModel<Toilet> findToiletModel;
+	private FindToiletRenderer findToiletRenderer;
 
 	/**
 	 * Launch the application.
@@ -464,11 +466,14 @@ public class MainView extends JFrame {
 		tabbedPane.addTab("검색 결과", null, scrollPane_1, null);
 		
 		JList<Toilet> list = new JList<Toilet>();
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		findToiletModel = new DefaultListModel<>();
 		
+		findToiletRenderer = new FindToiletRenderer();
+		
 		list.setModel(findToiletModel);
-		list.setCellRenderer(toiletRender);
+		list.setCellRenderer(findToiletRenderer);
 		
 		scrollPane_1.setViewportView(list);
 		
@@ -476,6 +481,7 @@ public class MainView extends JFrame {
 		tabbedPane.addTab("전체 결과", null, scrollPane_2, null);
 		
 		JList<Toilet> list_1 = new JList<Toilet>();
+		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		DefaultListModel<Toilet> totalToiletModel = new DefaultListModel<>();
 		
@@ -484,10 +490,10 @@ public class MainView extends JFrame {
 			totalToiletModel.addElement(toilet);
 		}
 		
-		toiletRender = new ToiletRenderer();
+		totalToiletRender = new TotalToiletRenderer();
 		
 		list_1.setModel(totalToiletModel);
-		list_1.setCellRenderer(toiletRender);
+		list_1.setCellRenderer(totalToiletRender);
 		scrollPane_2.setViewportView(list_1);
 		
 		
@@ -534,7 +540,38 @@ public class MainView extends JFrame {
 		}
 	}
 	
-	private class ToiletRenderer extends JLabel implements ListCellRenderer<Toilet> {
+	private class FindToiletRenderer extends ToiletPanel implements ListCellRenderer<Toilet> {
+
+		Toilet toilet = null;
+		
+		@Override
+		public Component getListCellRendererComponent(JList<? extends Toilet> list, Toilet value, int index,
+				boolean isSelected, boolean cellHasFocus) {
+			
+			toilet = value;
+			
+			panel_1.setBackground(GoogleMapTemplate.HexToColor(toilet.getColor()));
+			
+			lblNewLabel.setText(value.getMarkerLabel());
+			lblNewLabel_1.setText(String.format("%dm", (int)(value.getDistance() * 1000)));
+			lblNewLabel_2.setText(value.getLocationName());
+			
+			return this;
+		}
+		
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			
+			g.setColor(Color.BLACK);
+			g.drawRect(0, 0, getWidth(), getHeight());
+					
+//			super.paintComponent(g);
+		}
+		
+	}
+	
+	private class TotalToiletRenderer extends JLabel implements ListCellRenderer<Toilet> {
 
 		Toilet toilet = null;
 		
@@ -548,7 +585,7 @@ public class MainView extends JFrame {
 //			setBackground(GoogleMapTemplate.HexToColor(toilet.getColor()));
 //			setForeground(GoogleMapTemplate.HexToColor(toilet.getColor()));
 //			setForeground(Color.WHITE);
-			setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+			setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 //			setHorizontalAlignment(SwingConstants.CENTER);
 			
 			setBorder(new EmptyBorder(0, 35, 0, 0));
