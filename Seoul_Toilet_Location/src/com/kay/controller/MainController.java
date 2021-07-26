@@ -223,10 +223,12 @@ public class MainController {
 	public String searchAddressSeoulLocation(String address) {
 		// 서울 종로구 삼일대로19길 24 이와 같은 형태로 옴 split해서 쓸 예정
 		
-		String mainNum = address.split(" ")[3];
+		int offset = address.split(" ").length - 2;
+		
+		String mainNum = address.split(" ")[1 + offset];
 		String subNum = mainNum.indexOf("-") != -1 ? mainNum.split("-")[1] : "0";
 		mainNum = mainNum.indexOf("-") != -1 ? mainNum.split("-")[0] : mainNum;
-		address = address.split(" ")[2];
+		address = address.split(" ")[offset];
 		Location location = selectAddressSeoulLocation(address, mainNum, subNum);
 		
 		System.out.println(location);

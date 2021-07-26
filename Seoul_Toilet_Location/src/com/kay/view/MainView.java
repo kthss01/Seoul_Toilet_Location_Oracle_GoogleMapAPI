@@ -2,16 +2,24 @@ package com.kay.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Collection;
+import java.util.List;
 
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,28 +32,16 @@ import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.kay.controller.MainController;
-
-import com.kay.model.vo.GoogleMap;
-
 import com.kay.common.GoogleMapTemplate;
-
-import javax.swing.ScrollPaneConstants;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import javax.swing.ButtonGroup;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import com.kay.common.LocationTemplate;
+import com.kay.controller.MainController;
+import com.kay.model.vo.GoogleMap;
+import com.kay.model.vo.Toilet;
 
 public class MainView extends JFrame {
 
@@ -55,6 +51,8 @@ public class MainView extends JFrame {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton rdbtnNewRadioButton;
 	private JRadioButton rdbtnNewRadioButton_1;
+	private ToiletRenderer toiletRender;
+	private DefaultListModel<Toilet> findToiletModel;
 
 	/**
 	 * Launch the application.
@@ -231,6 +229,8 @@ public class MainView extends JFrame {
 				
 				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
 				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+				
+				updateFindToiletList();
 			}
 		});
 		btnSearch.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
@@ -455,15 +455,41 @@ public class MainView extends JFrame {
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		tabbedPane.setBackground(Color.WHITE);
 		tabbedPane.setPreferredSize(new Dimension(324, 368));
 		panel.add(tabbedPane, BorderLayout.NORTH);
 		
-		JList list = new JList();
-		tabbedPane.addTab("결과", null, list, null);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		tabbedPane.addTab("검색 결과", null, scrollPane_1, null);
 		
-		JList list_1 = new JList();
-		tabbedPane.addTab("전체", null, list_1, null);
+		JList<Toilet> list = new JList<Toilet>();
+		
+		findToiletModel = new DefaultListModel<>();
+		
+		list.setModel(findToiletModel);
+		list.setCellRenderer(toiletRender);
+		
+		scrollPane_1.setViewportView(list);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		tabbedPane.addTab("전체 결과", null, scrollPane_2, null);
+		
+		JList<Toilet> list_1 = new JList<Toilet>();
+		
+		DefaultListModel<Toilet> totalToiletModel = new DefaultListModel<>();
+		
+		Collection<Toilet> totalToilet = LocationTemplate.getToilet().values();
+		for (Toilet toilet : totalToilet) {
+			totalToiletModel.addElement(toilet);
+		}
+		
+		toiletRender = new ToiletRenderer();
+		
+		list_1.setModel(totalToiletModel);
+		list_1.setCellRenderer(toiletRender);
+		scrollPane_2.setViewportView(list_1);
+		
 		
 		JPanel panel_1 = new JPanel();
 //		panel_1.setBackground(Color.LIGHT_GRAY);
@@ -495,5 +521,53 @@ public class MainView extends JFrame {
 		table.getColumnModel().getColumn(0).setPreferredWidth(114);
 		table.getColumnModel().getColumn(1).setPreferredWidth(114);
 		panel_1.add(table, BorderLayout.CENTER);	
+	}
+	
+	private void updateFindToiletList() {
+		
+		findToiletModel.clear();
+		
+		List<Toilet> list = LocationTemplate.getNearToilet();
+		
+		for (Toilet toilet : list) {
+			findToiletModel.addElement(toilet);
+		}
+	}
+	
+	private class ToiletRenderer extends JLabel implements ListCellRenderer<Toilet> {
+
+		Toilet toilet = null;
+		
+		@Override
+		public Component getListCellRendererComponent(JList<? extends Toilet> list, Toilet value, int index,
+				boolean isSelected, boolean cellHasFocus) {
+			
+			toilet = value;
+			
+			setText(value.getLocationName());
+//			setBackground(GoogleMapTemplate.HexToColor(toilet.getColor()));
+//			setForeground(GoogleMapTemplate.HexToColor(toilet.getColor()));
+//			setForeground(Color.WHITE);
+			setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+//			setHorizontalAlignment(SwingConstants.CENTER);
+			
+			setBorder(new EmptyBorder(0, 35, 0, 0));
+			
+			return this;
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+//			super.paintComponent(g);
+			
+			g.setColor(GoogleMapTemplate.HexToColor(toilet.getColor()));
+			g.fillRect(0, 0, 30, getHeight());
+			
+			g.setColor(Color.BLACK);
+			g.drawRect(0, 0, getWidth(), getHeight());
+					
+			super.paintComponent(g);
+		}
+		
 	}
 }
