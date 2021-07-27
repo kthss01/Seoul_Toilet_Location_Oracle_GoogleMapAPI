@@ -48,6 +48,8 @@ import com.kay.model.vo.Toilet;
 import javax.swing.ListSelectionModel;
 import javax.swing.BoxLayout;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class MainView extends JFrame {
 
@@ -68,6 +70,19 @@ public class MainView extends JFrame {
 		{"상세제목4", "상세내용4"},
 		{"상세제목5", "상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5"}
 	};
+	private String[] toiletDetailTableHeader = new String[] {"상세 제목", "상세 내용"};
+	
+	private JLabel lblGuName;
+	private JLabel lblLocationName;
+	private JLabel lblRoadAddress;
+	private JLabel lblDistance;
+	private JLabel lblNumAddress;
+	private JLabel lblPhone;
+	private JLabel lblUsingTime;
+	private JLabel lblLocX;
+	private JLabel lblLocY;
+	private JLabel lblMarkerLabel;
+	private JPanel panel_MarkerColor;
 
 	/**
 	 * Launch the application.
@@ -479,6 +494,13 @@ public class MainView extends JFrame {
 		tabbedPane.addTab("검색 결과", null, scrollPane_1, null);
 		
 		JList<Toilet> list = new JList<Toilet>();
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (list.getSelectedIndex() != -1) {
+					updateToiletInfo(list.getSelectedValue());
+				}
+			}
+		});
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		findToiletModel = new DefaultListModel<>();
@@ -494,6 +516,32 @@ public class MainView extends JFrame {
 		tabbedPane.addTab("전체 결과", null, scrollPane_2, null);
 		
 		JList<Toilet> list_1 = new JList<Toilet>();
+		list_1.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (list_1.getSelectedIndex() != -1) {
+					updateToiletInfo(list_1.getSelectedValue());
+					
+					// distance 설정만 따로 해줌
+					double lon1 = Double.parseDouble(list_1.getSelectedValue().getLocY());
+					double lat1 = Double.parseDouble(list_1.getSelectedValue().getLocX());
+					
+					String[] center = GoogleMapTemplate.Map().getCenter().split(",");
+					double lon2 = Double.parseDouble(center[0]); 
+					double lat2 = Double.parseDouble(center[1]); 
+					
+					double distance = LocationTemplate.distance(lon1, lat1, lon2, lat2, "meter");
+					
+//					이상하게 두번 출력됨 왜그런지 모르겠음 이거 처리는 나중에 생각하자
+//					System.out.printf("%f %f %f %f = %f\n", lon1, lat1, lon2, lat2, distance);
+			
+					lblDistance.setText(String.format("%dm", (int)(distance)));
+					
+					// 뒤 바뀌어있음
+					lblLocX.setText(String.format("%.6f", Double.parseDouble(list_1.getSelectedValue().getLocY())));
+					lblLocY.setText(String.format("%.6f", Double.parseDouble(list_1.getSelectedValue().getLocX())));
+				}
+			}
+		});
 		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		DefaultListModel<Toilet> totalToiletModel = new DefaultListModel<>();
@@ -531,20 +579,20 @@ public class MainView extends JFrame {
 		panel_20.add(panel_21, BorderLayout.WEST);
 		panel_21.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_8 = new JLabel("GU_NAME");
-		lblNewLabel_8.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_21.add(lblNewLabel_8, BorderLayout.CENTER);
+		lblGuName = new JLabel("GU_NAME");
+		lblGuName.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lblGuName.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_21.add(lblGuName, BorderLayout.CENTER);
 		
 		JPanel panel_23 = new JPanel();
 		panel_23.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_20.add(panel_23, BorderLayout.CENTER);
 		panel_23.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel = new JLabel("LOCATION_NAME");
-		lblNewLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_23.add(lblNewLabel, BorderLayout.CENTER);
+		lblLocationName = new JLabel("LOCATION_NAME");
+		lblLocationName.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lblLocationName.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_23.add(lblLocationName, BorderLayout.CENTER);
 		
 		JPanel panel_22 = new JPanel();
 		panel_19.add(panel_22);
@@ -555,10 +603,10 @@ public class MainView extends JFrame {
 		panel_22.add(panel_24, BorderLayout.CENTER);
 		panel_24.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_11 = new JLabel("ROAD_ADDRESS");
-		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_11.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_24.add(lblNewLabel_11, BorderLayout.CENTER);
+		lblRoadAddress = new JLabel("ROAD_ADDRESS");
+		lblRoadAddress.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRoadAddress.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_24.add(lblRoadAddress, BorderLayout.CENTER);
 		
 		JPanel panel_25 = new JPanel();
 		panel_25.setPreferredSize(new Dimension(80, 50));
@@ -566,10 +614,10 @@ public class MainView extends JFrame {
 		panel_22.add(panel_25, BorderLayout.WEST);
 		panel_25.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_12 = new JLabel("DISTACNE");
-		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_12.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_25.add(lblNewLabel_12, BorderLayout.CENTER);
+		lblDistance = new JLabel("DISTACNE");
+		lblDistance.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDistance.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_25.add(lblDistance, BorderLayout.CENTER);
 		
 		JPanel panel_26 = new JPanel();
 		panel_19.add(panel_26);
@@ -580,21 +628,21 @@ public class MainView extends JFrame {
 		panel_26.add(panel_28, BorderLayout.CENTER);
 		panel_28.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_9 = new JLabel("NUM_ADDRESS");
-		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_9.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_28.add(lblNewLabel_9, BorderLayout.CENTER);
+		lblNumAddress = new JLabel("NUM_ADDRESS");
+		lblNumAddress.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumAddress.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_28.add(lblNumAddress, BorderLayout.CENTER);
 		
 		JPanel panel_29 = new JPanel();
-		panel_29.setPreferredSize(new Dimension(80, 50));
+		panel_29.setPreferredSize(new Dimension(100, 50));
 		panel_29.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_26.add(panel_29, BorderLayout.WEST);
 		panel_29.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_10 = new JLabel("PHONE");
-		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_10.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_29.add(lblNewLabel_10, BorderLayout.CENTER);
+		lblPhone = new JLabel("PHONE");
+		lblPhone.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPhone.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_29.add(lblPhone, BorderLayout.CENTER);
 		
 		JPanel panel_27 = new JPanel();
 		panel_19.add(panel_27);
@@ -603,13 +651,13 @@ public class MainView extends JFrame {
 		JPanel panel_32 = new JPanel();
 		panel_32.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_32.setPreferredSize(new Dimension(50, 50));
-		panel_27.add(panel_32, BorderLayout.WEST);
+		panel_27.add(panel_32, BorderLayout.EAST);
 		panel_32.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_15 = new JLabel("USING_TIME");
-		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_15.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_32.add(lblNewLabel_15, BorderLayout.CENTER);
+		lblUsingTime = new JLabel("USING_TIME");
+		lblUsingTime.setHorizontalAlignment(SwingConstants.CENTER);
+		lblUsingTime.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_32.add(lblUsingTime, BorderLayout.CENTER);
 		
 		JPanel panel_33 = new JPanel();
 		panel_27.add(panel_33, BorderLayout.CENTER);
@@ -620,20 +668,31 @@ public class MainView extends JFrame {
 		panel_33.add(panel_30);
 		panel_30.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_13 = new JLabel("LOC_X");
-		lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_13.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_30.add(lblNewLabel_13, BorderLayout.CENTER);
+		lblLocX = new JLabel("LOC_X");
+		lblLocX.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLocX.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_30.add(lblLocX, BorderLayout.CENTER);
 		
 		JPanel panel_31 = new JPanel();
 		panel_31.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_33.add(panel_31);
 		panel_31.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_14 = new JLabel("LOC_Y");
-		lblNewLabel_14.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_14.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_31.add(lblNewLabel_14, BorderLayout.CENTER);
+		lblLocY = new JLabel("LOC_Y");
+		lblLocY.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLocY.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_31.add(lblLocY, BorderLayout.CENTER);
+		
+		panel_MarkerColor = new JPanel();
+		panel_MarkerColor.setPreferredSize(new Dimension(40, 50));
+		panel_MarkerColor.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_27.add(panel_MarkerColor, BorderLayout.WEST);
+		panel_MarkerColor.setLayout(new BorderLayout(0, 0));
+		
+		lblMarkerLabel = new JLabel("Label");
+		lblMarkerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMarkerLabel.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panel_MarkerColor.add(lblMarkerLabel, BorderLayout.CENTER);
 
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
@@ -643,10 +702,7 @@ public class MainView extends JFrame {
 		table = new JTable();
 		table.setFillsViewportHeight(true);
 		
-		table.setModel(new DefaultTableModel(
-				toiletDetailTable,
-				new String[] {"상세 제목", "상세 내용"}
-		));
+		table.setModel(new DefaultTableModel(toiletDetailTable, toiletDetailTableHeader));
 		
 		table.setRowSelectionAllowed(false);
 		table.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
@@ -664,6 +720,25 @@ public class MainView extends JFrame {
 		scrollPane_3.setViewportView(table);
 	}
 	
+	private void updateToiletInfo(Toilet toilet) {
+		
+		lblMarkerLabel.setText(toilet.getMarkerLabel());
+		lblMarkerLabel.setForeground(Color.WHITE);
+		panel_MarkerColor.setBackground(GoogleMapTemplate.HexToColor(toilet.getColor()));
+		lblDistance.setText(String.format("%dm", (int)(toilet.getDistance() * 1000)));
+		
+		lblLocationName.setText(toilet.getLocationName());
+		lblGuName.setText(toilet.getGuName());
+		lblUsingTime.setText(toilet.getUsingTime());
+		lblRoadAddress.setText(toilet.getRoadAddress());
+		lblNumAddress.setText(toilet.getNumAddress());
+		lblPhone.setText(toilet.getPhone());
+		lblLocX.setText(String.format("%.6f", Double.parseDouble(toilet.getLocX())));
+		lblLocY.setText(String.format("%.6f", Double.parseDouble(toilet.getLocY())));
+		
+		updateToiletDetailTable(toilet);
+	}
+	
 	private void updateFindToiletList() {
 		
 		findToiletModel.clear();
@@ -676,17 +751,21 @@ public class MainView extends JFrame {
 	}
 	
 	private void updateToiletDetailTable(Toilet toilet) {
-		toiletDetailTable[0][0] = toilet.getDetailName1();
-		toiletDetailTable[1][0] = toilet.getDetailName2();
-		toiletDetailTable[2][0] = toilet.getDetailName3();
-		toiletDetailTable[3][0] = toilet.getDetailName4();
-		toiletDetailTable[4][0] = toilet.getDetailName5();
+		toiletDetailTable[0][0] = toilet.getDetailName1() == null ? "" : toilet.getDetailName1();
+		toiletDetailTable[1][0] = toilet.getDetailName2() == null ? "" : toilet.getDetailName2();
+		toiletDetailTable[2][0] = toilet.getDetailName3() == null ? "" : toilet.getDetailName3();
+		toiletDetailTable[3][0] = toilet.getDetailName4() == null ? "" : toilet.getDetailName4();
+		toiletDetailTable[4][0] = toilet.getDetailName5() == null ? "" : toilet.getDetailName5();
 		
-		toiletDetailTable[0][1] = toilet.getDatailContent1();
-		toiletDetailTable[1][1] = toilet.getDatailContent2();
-		toiletDetailTable[2][1] = toilet.getDatailContent3();
-		toiletDetailTable[3][1] = toilet.getDatailContent4();
-		toiletDetailTable[4][1] = toilet.getDatailContent5();
+		toiletDetailTable[0][1] = toilet.getDatailContent1() == null ? "" : toilet.getDatailContent1();
+		toiletDetailTable[1][1] = toilet.getDatailContent2() == null ? "" : toilet.getDatailContent2();
+		toiletDetailTable[2][1] = toilet.getDatailContent3() == null ? "" : toilet.getDatailContent3();
+		toiletDetailTable[3][1] = toilet.getDatailContent4() == null ? "" : toilet.getDatailContent4();
+		toiletDetailTable[4][1] = toilet.getDatailContent5() == null ? "" : toilet.getDatailContent5();
+		
+		table.setModel(new DefaultTableModel(toiletDetailTable, toiletDetailTableHeader));
+		setTableColumnAlignCenter(table);
+		table.getColumn("상세 내용").setPreferredWidth(200);
 	}
 	
 	// table column 가운데 정렬 시켜주는 메소드
