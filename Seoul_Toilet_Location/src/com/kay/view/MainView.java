@@ -44,6 +44,7 @@ import com.kay.model.vo.GoogleMap;
 import com.kay.model.vo.Toilet;
 import javax.swing.ListSelectionModel;
 import javax.swing.BoxLayout;
+import javax.swing.border.LineBorder;
 
 public class MainView extends JFrame {
 
@@ -513,43 +514,116 @@ public class MainView extends JFrame {
 		panel_19.add(panel_20);
 		panel_20.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel = new JLabel("Location_NAME");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_20.add(lblNewLabel, BorderLayout.CENTER);
+		JPanel panel_21 = new JPanel();
+		panel_21.setPreferredSize(new Dimension(60, 50));
+		panel_21.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_20.add(panel_21, BorderLayout.WEST);
+		panel_21.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblNewLabel_8 = new JLabel("GU_NAME");
-		panel_20.add(lblNewLabel_8, BorderLayout.WEST);
+		lblNewLabel_8.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_21.add(lblNewLabel_8, BorderLayout.CENTER);
+		
+		JPanel panel_23 = new JPanel();
+		panel_23.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_20.add(panel_23, BorderLayout.CENTER);
+		panel_23.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel = new JLabel("LOCATION_NAME");
+		lblNewLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_23.add(lblNewLabel, BorderLayout.CENTER);
 		
 		JPanel panel_22 = new JPanel();
 		panel_19.add(panel_22);
 		panel_22.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_11 = new JLabel("ROAD_ADDRESS");
-		panel_22.add(lblNewLabel_11, BorderLayout.WEST);
+		JPanel panel_24 = new JPanel();
+		panel_24.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_22.add(panel_24, BorderLayout.CENTER);
+		panel_24.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_12 = new JLabel("Distance");
-		panel_22.add(lblNewLabel_12, BorderLayout.EAST);
+		JLabel lblNewLabel_11 = new JLabel("ROAD_ADDRESS");
+		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_11.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_24.add(lblNewLabel_11, BorderLayout.CENTER);
+		
+		JPanel panel_25 = new JPanel();
+		panel_25.setPreferredSize(new Dimension(80, 50));
+		panel_25.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_22.add(panel_25, BorderLayout.WEST);
+		panel_25.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_12 = new JLabel("DISTACNE");
+		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_12.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_25.add(lblNewLabel_12, BorderLayout.CENTER);
 		
 		JPanel panel_26 = new JPanel();
 		panel_19.add(panel_26);
 		panel_26.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_9 = new JLabel("NUM_ADDRESS");
-		panel_26.add(lblNewLabel_9, BorderLayout.WEST);
-		lblNewLabel_9.setHorizontalAlignment(SwingConstants.LEFT);
+		JPanel panel_28 = new JPanel();
+		panel_28.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_26.add(panel_28, BorderLayout.CENTER);
+		panel_28.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_10 = new JLabel("Phone");
-		panel_26.add(lblNewLabel_10, BorderLayout.EAST);
+		JLabel lblNewLabel_9 = new JLabel("NUM_ADDRESS");
+		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_9.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_28.add(lblNewLabel_9, BorderLayout.CENTER);
+		
+		JPanel panel_29 = new JPanel();
+		panel_29.setPreferredSize(new Dimension(80, 50));
+		panel_29.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_26.add(panel_29, BorderLayout.WEST);
+		panel_29.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_10 = new JLabel("PHONE");
+		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_10.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_29.add(lblNewLabel_10, BorderLayout.CENTER);
 		
 		JPanel panel_27 = new JPanel();
 		panel_19.add(panel_27);
-		panel_27.setLayout(new GridLayout(0, 2, 0, 0));
+		panel_27.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_32 = new JPanel();
+		panel_32.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_32.setPreferredSize(new Dimension(50, 50));
+		panel_27.add(panel_32, BorderLayout.WEST);
+		panel_32.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_15 = new JLabel("USING_TIME");
+		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_15.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_32.add(lblNewLabel_15, BorderLayout.CENTER);
+		
+		JPanel panel_33 = new JPanel();
+		panel_27.add(panel_33, BorderLayout.CENTER);
+		panel_33.setLayout(new GridLayout(0, 2, 0, 0));
+		
+		JPanel panel_30 = new JPanel();
+		panel_30.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_33.add(panel_30);
+		panel_30.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblNewLabel_13 = new JLabel("LOC_X");
-		panel_27.add(lblNewLabel_13);
+		lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_13.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_30.add(lblNewLabel_13, BorderLayout.CENTER);
+		
+		JPanel panel_31 = new JPanel();
+		panel_31.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_33.add(panel_31);
+		panel_31.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblNewLabel_14 = new JLabel("LOC_Y");
-		panel_27.add(lblNewLabel_14);
+		lblNewLabel_14.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_14.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		panel_31.add(lblNewLabel_14, BorderLayout.CENTER);
+
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
 		scrollPane_3.setPreferredSize(new Dimension(324, 200));
@@ -565,7 +639,7 @@ public class MainView extends JFrame {
 				{null, null},
 			},
 			new String[] {
-				"New column", "New column"
+				"상세 제목", "상세 내용"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
