@@ -31,11 +31,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import com.kay.common.GoogleMapTemplate;
 import com.kay.common.LocationTemplate;
@@ -57,6 +60,14 @@ public class MainView extends JFrame {
 	private DefaultListModel<Toilet> findToiletModel;
 	private FindToiletRenderer findToiletRenderer;
 	private JTable table;
+	
+	private String[][] toiletDetailTable = new String[][] {
+		{"상세제목1", "상세내용1"},
+		{"상세제목2", "상세내용2"},
+		{"상세제목3", "상세내용3"},
+		{"상세제목4", "상세내용4"},
+		{"상세제목5", "상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5"}
+	};
 
 	/**
 	 * Launch the application.
@@ -630,27 +641,26 @@ public class MainView extends JFrame {
 		panel_1.add(scrollPane_3, BorderLayout.SOUTH);
 		
 		table = new JTable();
+		table.setFillsViewportHeight(true);
+		
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-			},
-			new String[] {
-				"상세 제목", "상세 내용"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, true
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+				toiletDetailTable,
+				new String[] {"상세 제목", "상세 내용"}
+		));
+		
 		table.setRowSelectionAllowed(false);
 		table.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		
+		table.setDefaultRenderer(Object.class, new ToiletDetailTableRenderer());
+		
+//		table.getColumn("상세 제목").setPreferredWidth(100);
+		table.getColumn("상세 내용").setPreferredWidth(200);
+//		table.getColumn("상세 내용").setCellRenderer(new ToiletDetailTableRenderer());
+		
+		table.setRowHeight(50);
+		
+		setTableColumnAlignCenter(table);
+		
 		scrollPane_3.setViewportView(table);
 	}
 	
@@ -664,6 +674,95 @@ public class MainView extends JFrame {
 			findToiletModel.addElement(toilet);
 		}
 	}
+	
+	private void updateToiletDetailTable(Toilet toilet) {
+		toiletDetailTable[0][0] = toilet.getDetailName1();
+		toiletDetailTable[1][0] = toilet.getDetailName2();
+		toiletDetailTable[2][0] = toilet.getDetailName3();
+		toiletDetailTable[3][0] = toilet.getDetailName4();
+		toiletDetailTable[4][0] = toilet.getDetailName5();
+		
+		toiletDetailTable[0][1] = toilet.getDatailContent1();
+		toiletDetailTable[1][1] = toilet.getDatailContent2();
+		toiletDetailTable[2][1] = toilet.getDatailContent3();
+		toiletDetailTable[3][1] = toilet.getDatailContent4();
+		toiletDetailTable[4][1] = toilet.getDatailContent5();
+	}
+	
+	// table column 가운데 정렬 시켜주는 메소드
+	private void setTableColumnAlignCenter(JTable table) {
+		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
+		tcr.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		
+		table.getColumnModel().getColumn(0).setCellRenderer(tcr);		
+	}
+	
+//	private class ToiletTableModel extends DefaultTableModel {
+//		
+//		Class[] columnTypes = new Class[] { String.class, String.class };
+//
+//		private ToiletTableModel(Object[][] data, Object[] columnNames) {
+//			super(data, columnNames);
+//		}
+//
+//		public Class GetColumnClass(int columnIndex) {
+//			return columnTypes[columnIndex];
+//		}
+//	}
+	
+	private class ToiletDetailTableRenderer extends DefaultTableCellRenderer {
+
+		public ToiletDetailTableRenderer() {
+			setHorizontalAlignment(SwingConstants.CENTER);
+		}
+		
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			
+			Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			
+			JTextArea textArea = new JTextArea(value.toString());
+			
+			textArea.setLineWrap(true);
+			textArea.setFont(table.getFont());
+			textArea.setBorder(new EmptyBorder(5, 5, 0, 0));
+
+			c = textArea;
+			
+			return c;
+		}
+		
+	}
+
+//	private class ToiletDetailTableRenderer extends JTextArea implements TableCellRenderer {
+//		
+//		public ToiletDetailTableRenderer() {
+//			setLineWrap(true);
+//			setWrapStyleWord(true);
+//			setOpaque(true);
+//			setEditable(false);
+////			setPreferredSize(new Dimension(300, 100));
+//			
+//		}
+//		
+//		@Override
+//		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+//				int row, int column) {
+//			
+//			setText(value.toString());
+////			setText(String.format("%d : %d", row, column));
+//			setFont(table.getFont());
+//			
+////			setBackground(Color.CYAN);
+//			
+//			setEditable(false);
+//			
+//			return this;
+//		}
+//
+//	}
 	
 	private class FindToiletRenderer extends ToiletPanel implements ListCellRenderer<Toilet> {
 
