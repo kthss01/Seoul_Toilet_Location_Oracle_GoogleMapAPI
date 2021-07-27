@@ -43,11 +43,11 @@ import com.kay.controller.MainController;
 import com.kay.model.vo.GoogleMap;
 import com.kay.model.vo.Toilet;
 import javax.swing.ListSelectionModel;
+import javax.swing.BoxLayout;
 
 public class MainView extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
 	private JTextField textField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton rdbtnNewRadioButton;
@@ -55,6 +55,7 @@ public class MainView extends JFrame {
 	private TotalToiletRenderer totalToiletRender;
 	private DefaultListModel<Toilet> findToiletModel;
 	private FindToiletRenderer findToiletRenderer;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -503,17 +504,60 @@ public class MainView extends JFrame {
 		panel.add(panel_1, BorderLayout.SOUTH);
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
+		JPanel panel_19 = new JPanel();
+		panel_19.setPreferredSize(new Dimension(324, 150));
+		panel_1.add(panel_19, BorderLayout.NORTH);
+		panel_19.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JPanel panel_20 = new JPanel();
+		panel_19.add(panel_20);
+		panel_20.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel = new JLabel("Location_NAME");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_20.add(lblNewLabel, BorderLayout.CENTER);
+		
+		JLabel lblNewLabel_8 = new JLabel("GU_NAME");
+		panel_20.add(lblNewLabel_8, BorderLayout.WEST);
+		
+		JPanel panel_22 = new JPanel();
+		panel_19.add(panel_22);
+		panel_22.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_11 = new JLabel("ROAD_ADDRESS");
+		panel_22.add(lblNewLabel_11, BorderLayout.WEST);
+		
+		JLabel lblNewLabel_12 = new JLabel("Distance");
+		panel_22.add(lblNewLabel_12, BorderLayout.EAST);
+		
+		JPanel panel_26 = new JPanel();
+		panel_19.add(panel_26);
+		panel_26.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel_9 = new JLabel("NUM_ADDRESS");
+		panel_26.add(lblNewLabel_9, BorderLayout.WEST);
+		lblNewLabel_9.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		JLabel lblNewLabel_10 = new JLabel("Phone");
+		panel_26.add(lblNewLabel_10, BorderLayout.EAST);
+		
+		JPanel panel_27 = new JPanel();
+		panel_19.add(panel_27);
+		panel_27.setLayout(new GridLayout(0, 2, 0, 0));
+		
+		JLabel lblNewLabel_13 = new JLabel("LOC_X");
+		panel_27.add(lblNewLabel_13);
+		
+		JLabel lblNewLabel_14 = new JLabel("LOC_Y");
+		panel_27.add(lblNewLabel_14);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setPreferredSize(new Dimension(324, 200));
+		panel_1.add(scrollPane_3, BorderLayout.SOUTH);
+		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
 				{null, null},
 				{null, null},
 				{null, null},
@@ -523,10 +567,17 @@ public class MainView extends JFrame {
 			new String[] {
 				"New column", "New column"
 			}
-		));
-		table.getColumnModel().getColumn(0).setPreferredWidth(114);
-		table.getColumnModel().getColumn(1).setPreferredWidth(114);
-		panel_1.add(table, BorderLayout.CENTER);	
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table.setRowSelectionAllowed(false);
+		table.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		scrollPane_3.setViewportView(table);
 	}
 	
 	private void updateFindToiletList() {

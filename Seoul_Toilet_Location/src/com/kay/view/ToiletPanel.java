@@ -27,7 +27,7 @@ public class ToiletPanel extends JPanel {
 	 */
 	public ToiletPanel() {
 		setBackground(new Color(230, 230, 250));
-		setPreferredSize(new Dimension(324, 30));
+		setPreferredSize(new Dimension(300, 30));
 		setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		
 		panel_1 = new JPanel();
@@ -37,7 +37,7 @@ public class ToiletPanel extends JPanel {
 		
 		lblNewLabel = new JLabel("라벨");
 		panel_1.add(lblNewLabel);
-		lblNewLabel.setPreferredSize(new Dimension(48, 28));
+		lblNewLabel.setPreferredSize(new Dimension(40, 28));
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 12));
@@ -50,12 +50,12 @@ public class ToiletPanel extends JPanel {
 		
 		lblNewLabel_1 = new JLabel("거리");
 		panel.add(lblNewLabel_1);
-		lblNewLabel_1.setPreferredSize(new Dimension(68, 28));
+		lblNewLabel_1.setPreferredSize(new Dimension(56, 28));
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		
 		lblNewLabel_2 = new JLabel("주소");
-		lblNewLabel_2.setPreferredSize(new Dimension(204, this.getPreferredSize().height));
+		lblNewLabel_2.setPreferredSize(new Dimension(200, 30));
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		add(lblNewLabel_2);
