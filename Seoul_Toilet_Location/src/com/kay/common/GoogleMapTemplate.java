@@ -15,12 +15,44 @@ public class GoogleMapTemplate {
 	
 	private static GoogleMap map = null;
 	
+	private static GoogleMap map2 = null; // 화장실 리스트 선택시 이전 검색 정보 clone 해두기 위한 변수
+	
 	public static GoogleMap Map() {
 		if (map == null) {
 			map = new GoogleMap();
 			map.initMap();
 		}
 		return map;
+	}
+	
+	public static boolean isCloneMap() {
+		return map2 != null;
+	}
+	
+	public static void CloneMap() {
+		try {
+			map2 = map.clone();
+			
+//			System.out.println(map.toString());
+//			System.out.println();
+//			System.out.println(map2);
+			
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void RestoreMap() {
+		try {
+			
+//			System.out.println(map2);
+//			System.out.println();
+//			System.out.println(map);
+			
+			map = map2.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void downloadMap() {
@@ -33,7 +65,7 @@ public class GoogleMapTemplate {
 			System.out.println(imageURL); // test
 			URL url = new URL(imageURL);
 			InputStream is = url.openStream();
-			OutputStream os = new FileOutputStream(map.getCenter());
+			OutputStream os = new FileOutputStream(!map.getCenter().equals("") ? map.getCenter() : "template");
 			byte[] b = new byte[2048];
 			int length;
 			while ((length = is.read(b)) != -1) {

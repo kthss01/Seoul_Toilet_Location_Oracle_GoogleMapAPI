@@ -34,6 +34,29 @@ public class MainController {
 		return icon;
 	}
 	
+	public static ImageIcon setToiletMap(Toilet toilet) {
+		
+		Marker centerMarker = new Marker(Map().getCenter());
+		
+		Map().clearMap();
+		
+		Map().setCenter(toilet.getLocation());
+		
+		Map().getMarkers().addMarker(centerMarker);
+		
+		String size = "mid";
+		String color = toilet.getColor();
+		String label = toilet.getMarkerLabel();
+		
+		Map().getMarkers().addMarker(new Marker(size, color, label, toilet.getLocation()));
+		
+		downloadMap();
+		ImageIcon icon = getMap();
+		fileDelete();
+		
+		return icon;
+	}
+	
 	public static ImageIcon findToiletMap(String address) {
 		
 		Map().setCenter(address);
@@ -42,6 +65,14 @@ public class MainController {
 		
 		updateMarker();
 		
+		downloadMap();
+		ImageIcon icon = getMap();
+		fileDelete();
+		
+		return icon;
+	}
+	
+	public static ImageIcon downloadGoogleMap() {
 		downloadMap();
 		ImageIcon icon = getMap();
 		fileDelete();

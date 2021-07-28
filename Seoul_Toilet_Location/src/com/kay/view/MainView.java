@@ -83,6 +83,7 @@ public class MainView extends JFrame {
 	private JLabel lblLocY;
 	private JLabel lblMarkerLabel;
 	private JPanel panel_MarkerColor;
+	private JLabel lblGoogleMap;
 
 	/**
 	 * Launch the application.
@@ -119,7 +120,7 @@ public class MainView extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		panel2.add(scrollPane, BorderLayout.CENTER);
 		
-		JLabel lblGoogleMap = new JLabel("");
+		lblGoogleMap = new JLabel("");
 		lblGoogleMap.setPreferredSize(new Dimension(GoogleMapTemplate.Map().getSizeX(), GoogleMapTemplate.Map().getSizeY()));
 		scrollPane.setViewportView(lblGoogleMap);
 		
@@ -252,8 +253,10 @@ public class MainView extends JFrame {
 				
 				GoogleMapTemplate.Map().setChanged(true);
 //				ImageIcon icon = MainController.setMap(address);
-				ImageIcon icon = MainController.findToiletMap(address);
+				ImageIcon icon = MainController.findToiletMap(address);				
 				lblGoogleMap.setIcon(icon);
+				
+				GoogleMapTemplate.CloneMap();
 				
 //				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
 				
@@ -391,14 +394,19 @@ public class MainView extends JFrame {
 		JButton btnNewButton_6 = new JButton("");
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GoogleMapTemplate.Map().setChanged(true);
-				ImageIcon icon = MainController.updateZoomLevelMap(15); // 기본값이라 15로 가정
-				lblGoogleMap.setIcon(icon);
-				
+				if (GoogleMapTemplate.isCloneMap()) {
+					
+					GoogleMapTemplate.RestoreMap();
+					
+					GoogleMapTemplate.Map().setChanged(true);
+					ImageIcon icon = MainController.downloadGoogleMap();
+					lblGoogleMap.setIcon(icon);
+					
 //				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
-				
-				scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
-				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+					
+					scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+					scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
+				}
 			}
 		});
 		panel_5.add(btnNewButton_6, BorderLayout.CENTER);
@@ -494,8 +502,9 @@ public class MainView extends JFrame {
 		tabbedPane.addTab("검색 결과", null, scrollPane_1, null);
 		
 		JList<Toilet> list = new JList<Toilet>();
-		list.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				if (list.getSelectedIndex() != -1) {
 					updateToiletInfo(list.getSelectedValue());
 				}
@@ -516,8 +525,9 @@ public class MainView extends JFrame {
 		tabbedPane.addTab("전체 결과", null, scrollPane_2, null);
 		
 		JList<Toilet> list_1 = new JList<Toilet>();
-		list_1.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
+		list_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				if (list_1.getSelectedIndex() != -1) {
 					updateToiletInfo(list_1.getSelectedValue());
 					
@@ -542,6 +552,7 @@ public class MainView extends JFrame {
 				}
 			}
 		});
+		
 		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		DefaultListModel<Toilet> totalToiletModel = new DefaultListModel<>();
@@ -737,6 +748,10 @@ public class MainView extends JFrame {
 		lblLocY.setText(String.format("%.6f", Double.parseDouble(toilet.getLocY())));
 		
 		updateToiletDetailTable(toilet);
+		
+		GoogleMapTemplate.Map().setChanged(true);
+		ImageIcon icon = MainController.setToiletMap(toilet);
+		lblGoogleMap.setIcon(icon);
 	}
 	
 	private void updateFindToiletList() {

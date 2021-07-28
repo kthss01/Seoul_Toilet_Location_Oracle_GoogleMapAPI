@@ -179,13 +179,16 @@ public class GoogleMap implements Cloneable {
 
 		sb.append(BASIC_URL).append("?");
 
-		try {
-			sb.append("center=").append(URLEncoder.encode(center, "UTF-8")).append("&");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		if (!center.equals("")) {
+			try {
+				sb.append("center=").append(URLEncoder.encode(center, "UTF-8")).append("&");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 
-		sb.append("zoom=").append(zoom).append("&");
+		if (zoom != 0)
+			sb.append("zoom=").append(zoom).append("&");
 		sb.append("size=").append(sizeX).append("x").append(sizeY).append("&");
 
 		if (!maptype.equals(""))
@@ -200,12 +203,18 @@ public class GoogleMap implements Cloneable {
 	}
 
 	@Override
-	protected GoogleMap clone() throws CloneNotSupportedException {
+	public GoogleMap clone() throws CloneNotSupportedException {
 		GoogleMap googleMap = (GoogleMap) super.clone();
 
 		googleMap.markers = (Markers) markers.clone();
 
 		return googleMap;
+	}
+
+	public void clearMap() {
+		markers.getMarkers().clear();
+		center = "";
+		zoom = 0;
 	}
 
 }

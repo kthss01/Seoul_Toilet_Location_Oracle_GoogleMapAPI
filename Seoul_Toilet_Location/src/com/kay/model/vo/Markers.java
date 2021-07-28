@@ -41,7 +41,7 @@ public class Markers implements Cloneable {
 	protected Markers clone() throws CloneNotSupportedException {
 		Markers markers = (Markers) super.clone();
 		
-		
+		markers.list = (ArrayList<Marker>) list.clone();
 		
 		return markers;
 	}
