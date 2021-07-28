@@ -529,7 +529,6 @@ public class MainView extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (list_1.getSelectedIndex() != -1) {
-					updateToiletInfo(list_1.getSelectedValue());
 					
 					// distance 설정만 따로 해줌
 					double lon1 = Double.parseDouble(list_1.getSelectedValue().getLocY());
@@ -544,6 +543,10 @@ public class MainView extends JFrame {
 //					이상하게 두번 출력됨 왜그런지 모르겠음 이거 처리는 나중에 생각하자
 //					System.out.printf("%f %f %f %f = %f\n", lon1, lat1, lon2, lat2, distance);
 			
+					list_1.getSelectedValue().setDistance((float) distance);
+					
+					updateToiletInfo(list_1.getSelectedValue());
+					
 					lblDistance.setText(String.format("%dm", (int)(distance)));
 					
 					// 뒤 바뀌어있음

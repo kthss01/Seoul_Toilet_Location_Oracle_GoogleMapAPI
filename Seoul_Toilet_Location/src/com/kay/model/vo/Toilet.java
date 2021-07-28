@@ -77,7 +77,7 @@ public class Toilet {
 	};
 	
 	private float distance;
-	private String markerLabel;
+	private String markerLabel = "";
 	
 	private String id;
 	private String useable;
