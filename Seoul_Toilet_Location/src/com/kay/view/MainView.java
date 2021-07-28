@@ -84,6 +84,7 @@ public class MainView extends JFrame {
 	private JLabel lblMarkerLabel;
 	private JPanel panel_MarkerColor;
 	private JLabel lblGoogleMap;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -117,7 +118,7 @@ public class MainView extends JFrame {
 		contentPane.add(panel2, BorderLayout.CENTER);
 		panel2.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		panel2.add(scrollPane, BorderLayout.CENTER);
 		
 		lblGoogleMap = new JLabel("");
@@ -755,6 +756,9 @@ public class MainView extends JFrame {
 		GoogleMapTemplate.Map().setChanged(true);
 		ImageIcon icon = MainController.setToiletMap(toilet);
 		lblGoogleMap.setIcon(icon);
+		
+		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum() / 2 - 400);
+		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
 	}
 	
 	private void updateFindToiletList() {

@@ -32,9 +32,12 @@ public class GoogleMap implements Cloneable {
 	private int sizeY; // 이미지 크기 Y (세로)
 	// scale은 넘어가자 필요하면 그 때 만들기로
 	private String maptype = ""; // roadmap (default), satellite, terrain, hybrid 중 enum을 만들지 해야할 거 같음
+	
 	private Markers markers; // marker들 여러개 따로 클래스로 처리하려고함
 	// path도 일단 pass
 
+	private Paths paths;
+	
 	private StringBuilder sb;
 
 	public GoogleMap() {
@@ -46,6 +49,8 @@ public class GoogleMap implements Cloneable {
 		}
 
 		markers = new Markers();
+		
+		paths = new Paths();
 
 		markerLabel = new ArrayList<String>();
 		for (int i = 0; i < 10; i++) {
@@ -110,6 +115,14 @@ public class GoogleMap implements Cloneable {
 
 	public void setMarkers(Markers markers) {
 		this.markers = markers;
+	}
+	
+	public Paths getPaths() {
+		return paths;
+	}
+	
+	public void setPaths(Paths paths) {
+		this.paths = paths;
 	}
 
 	public String getMaptype() {
@@ -196,6 +209,9 @@ public class GoogleMap implements Cloneable {
 
 		if (markers.getMarkers().size() != 0)
 			sb.append(markers.toString()).append("&");
+		
+		if (paths.getPaths().size() != 0) 
+			sb.append(paths.toString()).append("&");
 
 		sb.append("key=").append(key);
 
@@ -207,12 +223,17 @@ public class GoogleMap implements Cloneable {
 		GoogleMap googleMap = (GoogleMap) super.clone();
 
 		googleMap.markers = (Markers) markers.clone();
+		
+		googleMap.paths = (Paths) paths.clone();
 
 		return googleMap;
 	}
 
 	public void clearMap() {
 		markers.getMarkers().clear();
+
+		paths.getPaths().clear();
+		
 		center = "";
 		zoom = 0;
 	}

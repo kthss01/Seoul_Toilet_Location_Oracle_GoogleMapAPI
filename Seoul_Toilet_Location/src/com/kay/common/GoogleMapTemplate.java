@@ -15,7 +15,7 @@ public class GoogleMapTemplate {
 	
 	private static GoogleMap map = null;
 	
-	private static GoogleMap map2 = null; // 화장실 리스트 선택시 이전 검색 정보 clone 해두기 위한 변수
+	private static GoogleMap originMap = null; // 화장실 리스트 선택시 이전 검색 정보 clone 해두기 위한 변수
 	
 	public static GoogleMap Map() {
 		if (map == null) {
@@ -25,13 +25,17 @@ public class GoogleMapTemplate {
 		return map;
 	}
 	
+	public static GoogleMap OriginMap() {
+		return originMap;
+	}
+	
 	public static boolean isCloneMap() {
-		return map2 != null;
+		return originMap != null;
 	}
 	
 	public static void CloneMap() {
 		try {
-			map2 = map.clone();
+			originMap = map.clone();
 			
 //			System.out.println(map.toString());
 //			System.out.println();
@@ -49,7 +53,7 @@ public class GoogleMapTemplate {
 //			System.out.println();
 //			System.out.println(map);
 			
-			map = map2.clone();
+			map = originMap.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}

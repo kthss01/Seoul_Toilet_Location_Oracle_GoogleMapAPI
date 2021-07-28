@@ -18,6 +18,7 @@ import com.kay.model.exception.MainException;
 import com.kay.model.vo.GoogleMap;
 import com.kay.model.vo.Location;
 import com.kay.model.vo.Marker;
+import com.kay.model.vo.Path;
 import com.kay.model.vo.Toilet;
 import com.kay.service.MainService;
 
@@ -35,8 +36,10 @@ public class MainController {
 	}
 	
 	public static ImageIcon setToiletMap(Toilet toilet) {
+
+		String center = GoogleMapTemplate.OriginMap().getCenter();
 		
-		Marker centerMarker = new Marker(Map().getCenter());
+		Marker centerMarker = new Marker(center);
 		
 		Map().clearMap();
 		
@@ -49,6 +52,14 @@ public class MainController {
 		String label = toilet.getMarkerLabel();
 		
 		Map().getMarkers().addMarker(new Marker(size, color, label, toilet.getLocation()));
+		
+		Path path = new Path();
+		path.setColor(color);
+		
+		path.setLocation(toilet.getLocation());
+		path.setLocation(center);
+		
+		Map().getPaths().addPath(path);
 		
 		downloadMap();
 		ImageIcon icon = getMap();
