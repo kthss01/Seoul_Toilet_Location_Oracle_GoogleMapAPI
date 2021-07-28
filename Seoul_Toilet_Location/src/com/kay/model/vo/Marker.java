@@ -2,7 +2,7 @@ package com.kay.model.vo;
 
 import java.util.ArrayList;
 
-public class Marker {
+public class Marker implements Cloneable {
 	private String size = GoogleMap.getMarkerSize()[0]; // tiny, mid, small 중 하나 안쓰면 default(normal) "" 시 normal로 처리할 예정
 	private String color = ""; // black, brown, green, purple, yellow, blue, gray, orange, red, white 중 하나 또는
 								// 0xFFFFCC 같은 32-bit hex color
@@ -99,4 +99,14 @@ public class Marker {
 		return mark.getSize().equals(size) && mark.getColor().equals(color) && mark.getLabel().equals(label);
 	}
 
+	@Override
+	protected Marker clone() throws CloneNotSupportedException {
+		Marker marker = (Marker) super.clone();
+		
+		marker.locations = (ArrayList<String>) locations.clone();
+		
+		return marker;
+	}
+
+	
 }

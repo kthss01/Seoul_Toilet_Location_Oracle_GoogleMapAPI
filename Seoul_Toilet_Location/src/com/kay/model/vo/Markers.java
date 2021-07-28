@@ -2,7 +2,7 @@ package com.kay.model.vo;
 
 import java.util.ArrayList;
 
-public class Markers {
+public class Markers implements Cloneable {
 	
 	private ArrayList<Marker> list = new ArrayList<Marker>();
 	
@@ -36,4 +36,15 @@ public class Markers {
 		
 		return sb.toString();
 	}
+
+	@Override
+	protected Markers clone() throws CloneNotSupportedException {
+		Markers markers = (Markers) super.clone();
+		
+		
+		
+		return markers;
+	}
+	
+	
 }
