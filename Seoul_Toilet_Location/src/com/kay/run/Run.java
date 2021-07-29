@@ -1,5 +1,6 @@
 package com.kay.run;
 
+import java.awt.EventQueue;
 import java.util.List;
 
 import com.kay.common.LocationTemplate;
@@ -55,6 +56,15 @@ public class Run {
 //		}
 		
 		// view
-		new MainView();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainView frame = new MainView();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
