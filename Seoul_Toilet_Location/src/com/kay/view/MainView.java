@@ -9,6 +9,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -34,34 +35,30 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 import com.kay.common.GoogleMapTemplate;
 import com.kay.common.LocationTemplate;
 import com.kay.controller.MainController;
 import com.kay.model.vo.GoogleMap;
 import com.kay.model.vo.Toilet;
-import javax.swing.ListSelectionModel;
-import javax.swing.BoxLayout;
-import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 
 public class MainView extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField textFieldAddress;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JRadioButton rdbtnNewRadioButton;
-	private JRadioButton rdbtnNewRadioButton_1;
+	private JRadioButton rdbtnRoadAddress;
+	private JRadioButton rdbtnXYAddress;
 	private TotalToiletRenderer totalToiletRender;
 	private DefaultListModel<Toilet> findToiletModel;
 	private FindToiletRenderer findToiletRenderer;
-	private JTable table;
+	private JTable tableDetailResultContent;
 	
 	private String[][] toiletDetailTable = new String[][] {
 		{"상세제목1", "상세내용1"},
@@ -71,6 +68,11 @@ public class MainView extends JFrame {
 		{"상세제목5", "상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5상세내용5"}
 	};
 	private String[] toiletDetailTableHeader = new String[] {"상세 제목", "상세 내용"};
+	
+	private String backgroundColor = "CED4DA";
+	private String[] detailBgColor = {
+			"CED4DA", "DEE2E6", "E9ECEF", "F8F9FA"
+	};
 	
 	private JLabel lblGuName;
 	private JLabel lblLocationName;
@@ -82,7 +84,7 @@ public class MainView extends JFrame {
 	private JLabel lblLocX;
 	private JLabel lblLocY;
 	private JLabel lblMarkerLabel;
-	private JPanel panel_MarkerColor;
+	private JPanel panelMarkerColor;
 	private JLabel lblGoogleMap;
 	private JScrollPane scrollPane;
 
@@ -109,17 +111,21 @@ public class MainView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(300, 100, 1024, 768);
 		contentPane = new JPanel();
+		
+		contentPane.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
+		
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JPanel panel2 = new JPanel();
-		panel2.setPreferredSize(new Dimension(700, 768));
-		contentPane.add(panel2, BorderLayout.CENTER);
-		panel2.setLayout(new BorderLayout(0, 0));
+		JPanel panelSection = new JPanel();
+		panelSection.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
+		panelSection.setPreferredSize(new Dimension(700, 768));
+		contentPane.add(panelSection, BorderLayout.CENTER);
+		panelSection.setLayout(new BorderLayout(0, 0));
 		
 		scrollPane = new JScrollPane();
-		panel2.add(scrollPane, BorderLayout.CENTER);
+		panelSection.add(scrollPane, BorderLayout.CENTER);
 		
 		lblGoogleMap = new JLabel("");
 		lblGoogleMap.setPreferredSize(new Dimension(GoogleMapTemplate.Map().getSizeX(), GoogleMapTemplate.Map().getSizeY()));
@@ -142,19 +148,21 @@ public class MainView extends JFrame {
 //		thread.start();
 
 			
-		JPanel panel_2 = new JPanel();
-		panel_2.setPreferredSize(new Dimension(700, 50));
-		panel2.add(panel_2, BorderLayout.NORTH);
-		panel_2.setLayout(null);
+		JPanel panelNavigation = new JPanel();
+		panelNavigation.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
+		panelNavigation.setPreferredSize(new Dimension(700, 50));
+		panelSection.add(panelNavigation, BorderLayout.NORTH);
+		panelNavigation.setLayout(null);
 		
-		JPanel panel_7 = new JPanel();
+		JPanel panelMapTypeTerrain = new JPanel();
 //		panel_7.setBackground(Color.RED);
-		panel_7.setBounds(607, 0, 65, 40);
-		panel_2.add(panel_7);
-		panel_7.setLayout(new BorderLayout(0, 0));
+		panelMapTypeTerrain.setBounds(607, 0, 65, 48);
+		panelNavigation.add(panelMapTypeTerrain);
+		panelMapTypeTerrain.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnNewButton_3 = new JButton("지형");
-		btnNewButton_3.addActionListener(new ActionListener() {
+		JButton btnMapTypeTerrain = new JButton("");
+		btnMapTypeTerrain.setIcon(new ImageIcon("./resources/images/terrain_maptype.png"));
+		btnMapTypeTerrain.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GoogleMapTemplate.Map().setChanged(true);
 				ImageIcon icon = MainController.updateMapTypeMap(GoogleMap.getMaptypes()[2]);
@@ -166,17 +174,18 @@ public class MainView extends JFrame {
 				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
 			}
 		});
-		btnNewButton_3.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_7.add(btnNewButton_3, BorderLayout.CENTER);
+		btnMapTypeTerrain.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelMapTypeTerrain.add(btnMapTypeTerrain, BorderLayout.CENTER);
 		
-		JPanel panel_7_1 = new JPanel();
+		JPanel panelMapTypeSatellite = new JPanel();
 //		panel_7_1.setBackground(Color.RED);
-		panel_7_1.setBounds(535, 0, 65, 40);
-		panel_2.add(panel_7_1);
-		panel_7_1.setLayout(new BorderLayout(0, 0));
+		panelMapTypeSatellite.setBounds(535, 0, 65, 48);
+		panelNavigation.add(panelMapTypeSatellite);
+		panelMapTypeSatellite.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnNewButton_2 = new JButton("위성");
-		btnNewButton_2.addActionListener(new ActionListener() {
+		JButton btnMapTypeSatellite = new JButton("");
+		btnMapTypeSatellite.setIcon(new ImageIcon("./resources/images/satellite_maptype.png"));
+		btnMapTypeSatellite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GoogleMapTemplate.Map().setChanged(true);
 				ImageIcon icon = MainController.updateMapTypeMap(GoogleMap.getMaptypes()[3]);
@@ -188,17 +197,18 @@ public class MainView extends JFrame {
 				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
 			}
 		});
-		btnNewButton_2.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_7_1.add(btnNewButton_2, BorderLayout.CENTER);
+		btnMapTypeSatellite.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelMapTypeSatellite.add(btnMapTypeSatellite, BorderLayout.CENTER);
 		
-		JPanel panel_7_2 = new JPanel();
+		JPanel panelMapTypeRoadmap = new JPanel();
 //		panel_7_2.setBackground(Color.RED);
-		panel_7_2.setBounds(463, 0, 65, 40);
-		panel_2.add(panel_7_2);
-		panel_7_2.setLayout(new BorderLayout(0, 0));
+		panelMapTypeRoadmap.setBounds(463, 0, 65, 48);
+		panelNavigation.add(panelMapTypeRoadmap);
+		panelMapTypeRoadmap.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnNewButton_1 = new JButton("일반");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnMapTypeRoadmap = new JButton("");
+		btnMapTypeRoadmap.setIcon(new ImageIcon("./resources/images/roadmap_maptype.png"));
+		btnMapTypeRoadmap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GoogleMapTemplate.Map().setChanged(true);
 				ImageIcon icon = MainController.updateMapTypeMap(GoogleMap.getMaptypes()[0]);
@@ -210,46 +220,54 @@ public class MainView extends JFrame {
 				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
 			}
 		});
-		btnNewButton_1.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_7_2.add(btnNewButton_1, BorderLayout.CENTER);
+		btnMapTypeRoadmap.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelMapTypeRoadmap.add(btnMapTypeRoadmap, BorderLayout.CENTER);
 		
-		JPanel panel_8 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_8.getLayout();
-		flowLayout.setVgap(0);
+		JPanel panelInputAddress = new JPanel();
+		panelInputAddress.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
+		FlowLayout fl_panelInputAddress = (FlowLayout) panelInputAddress.getLayout();
+		fl_panelInputAddress.setVgap(0);
 //		panel_8.setBackground(Color.YELLOW);
-		panel_8.setBounds(12, 0, 250, 40);
-		panel_2.add(panel_8);
+		panelInputAddress.setBounds(12, 0, 250, 40);
+		panelNavigation.add(panelInputAddress);
 		
-		textField = new JTextField();
-		textField.addFocusListener(new FocusAdapter() {
+		textFieldAddress = new JTextField();
+		textFieldAddress.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				textField.setText("");
+				textFieldAddress.setText("");
 			}
 		});
-		textField.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		textField.setText("도로명 주소 : 서울 구 도로명 번호");
-		textField.setPreferredSize(new Dimension(70, 40));
-		panel_8.add(textField);
-		textField.setColumns(20);
+		textFieldAddress.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		textFieldAddress.setText("도로명 주소 : 서울 구 도로명 번호");
+		textFieldAddress.setPreferredSize(new Dimension(70, 40));
+		panelInputAddress.add(textFieldAddress);
+		textFieldAddress.setColumns(20);
 		
-		JPanel panel_9 = new JPanel();
+		JPanel panelSearch = new JPanel();
+		panelSearch.setBackground(Color.WHITE);
 //		panel_9.setBackground(Color.LIGHT_GRAY);
-		panel_9.setBounds(274, 0, 60, 40);
-		panel_2.add(panel_9);
-		panel_9.setLayout(new BorderLayout(0, 0));
+		panelSearch.setBounds(265, 0, 50, 40);
+		panelNavigation.add(panelSearch);
+		panelSearch.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnSearch = new JButton("검색");
+		JButton btnSearch = new JButton("");
+		btnSearch.setContentAreaFilled(false);
+		
+		btnSearch.setIcon(imageSetSize(
+				new ImageIcon("./resources/images/outline_search_black_24dp.png"), 
+				panelSearch.getWidth() - 15, panelSearch.getHeight() - 10));
+		
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 //				System.out.println(scrollPane.getVerticalScrollBar().getValue() + " " + scrollPane.getHorizontalScrollBar().getValue());
 				
 				String address = null;
 				
-				if (rdbtnNewRadioButton.isSelected()) {
-					address = new MainController().searchAddressSeoulLocation(textField.getText());
-				} else if (rdbtnNewRadioButton_1.isSelected()) {
-					address = new MainController().searchXYSeoulLocation(textField.getText());
+				if (rdbtnRoadAddress.isSelected()) {
+					address = new MainController().searchAddressSeoulLocation(textFieldAddress.getText());
+				} else if (rdbtnXYAddress.isSelected()) {
+					address = new MainController().searchXYSeoulLocation(textFieldAddress.getText());
 				}
 				
 				GoogleMapTemplate.Map().setChanged(true);
@@ -268,132 +286,142 @@ public class MainView extends JFrame {
 			}
 		});
 		btnSearch.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_9.add(btnSearch, BorderLayout.CENTER);
+		panelSearch.add(btnSearch, BorderLayout.CENTER);
 		
-		rdbtnNewRadioButton = new JRadioButton("도로명 주소");
-		rdbtnNewRadioButton.addActionListener(new ActionListener() {
+		rdbtnRoadAddress = new JRadioButton("도로명 주소");
+		rdbtnRoadAddress.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
+		rdbtnRoadAddress.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textField.setText("도로명 주소 : 서울 구 도로명 번호");
+				textFieldAddress.setText("도로명 주소 : 서울 구 도로명 번호");
 			}
 		});
-		rdbtnNewRadioButton.setSelected(true);
-		buttonGroup.add(rdbtnNewRadioButton);
-		rdbtnNewRadioButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		rdbtnNewRadioButton.setBounds(342, 0, 121, 23);
-		panel_2.add(rdbtnNewRadioButton);
+		rdbtnRoadAddress.setSelected(true);
+		buttonGroup.add(rdbtnRoadAddress);
+		rdbtnRoadAddress.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		rdbtnRoadAddress.setBounds(342, 0, 121, 23);
+		panelNavigation.add(rdbtnRoadAddress);
 		
-		rdbtnNewRadioButton_1 = new JRadioButton("좌표");
-		rdbtnNewRadioButton_1.addActionListener(new ActionListener() {
+		rdbtnXYAddress = new JRadioButton("좌표");
+		rdbtnXYAddress.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
+		rdbtnXYAddress.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textField.setText("좌표 : 위도(Lat), 경도(Lng)");
+				textFieldAddress.setText("좌표 : 위도(Lat), 경도(Lng)");
 			}
 		});
-		buttonGroup.add(rdbtnNewRadioButton_1);
-		rdbtnNewRadioButton_1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		rdbtnNewRadioButton_1.setBounds(342, 19, 121, 23);
-		panel_2.add(rdbtnNewRadioButton_1);
+		buttonGroup.add(rdbtnXYAddress);
+		rdbtnXYAddress.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		rdbtnXYAddress.setBounds(342, 19, 121, 23);
+		panelNavigation.add(rdbtnXYAddress);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setPreferredSize(new Dimension(75, 768));
-		panel2.add(panel_3, BorderLayout.EAST);
-		panel_3.setLayout(null);
+		JPanel panelAside = new JPanel();
+		panelAside.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
+		panelAside.setPreferredSize(new Dimension(75, 768));
+		panelSection.add(panelAside, BorderLayout.EAST);
+		panelAside.setLayout(null);
 		
-		JPanel panel_4 = new JPanel();
+		JPanel panelLegend = new JPanel();
 //		panel_4.setBackground(Color.ORANGE);
-		panel_4.setBounds(10, 10, 53, 390);
-		panel_3.add(panel_4);
-		panel_4.setLayout(new GridLayout(7, 1, 0, 2));
+		panelLegend.setBounds(12, 10, 53, 390);
+		panelAside.add(panelLegend);
+		panelLegend.setLayout(new GridLayout(7, 1, 0, 2));
 		
-		JPanel panel_18 = new JPanel();
-		panel_18.setBackground(Color.WHITE);
-		panel_4.add(panel_18);
-		panel_18.setLayout(new BorderLayout(0, 0));
+		JPanel panelLegendLegend = new JPanel();
+		panelLegendLegend.setBackground(Color.WHITE);
+		panelLegend.add(panelLegendLegend);
+		panelLegendLegend.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_7 = new JLabel("범례");
-		lblNewLabel_7.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_18.add(lblNewLabel_7, BorderLayout.CENTER);
+		JLabel lblLegendLegend = new JLabel("범례");
+		lblLegendLegend.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		lblLegendLegend.setHorizontalAlignment(SwingConstants.CENTER);
+		panelLegendLegend.add(lblLegendLegend, BorderLayout.CENTER);
 		
-		JPanel panel_12 = new JPanel();
+		JPanel panelLegendToilet = new JPanel();
 //		panel_12.setBackground(new Color(255, 0, 0));
-		panel_12.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[0]));
-		panel_4.add(panel_12);
-		panel_12.setLayout(new BorderLayout(0, 0));
+		panelLegendToilet.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[0]));
+		panelLegend.add(panelLegendToilet);
+		panelLegendToilet.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_1 = new JLabel("화장실");
-		lblNewLabel_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_12.add(lblNewLabel_1, BorderLayout.CENTER);
+		JLabel lblLegendToilet = new JLabel("화장실");
+		lblLegendToilet.setForeground(new Color(255, 255, 255));
+		lblLegendToilet.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLegendToilet.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelLegendToilet.add(lblLegendToilet, BorderLayout.CENTER);
 		
-		JPanel panel_13 = new JPanel();
+		JPanel panelLegendPark = new JPanel();
 //		panel_13.setBackground(new Color(50, 205, 50));
-		panel_13.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[1]));
-		panel_4.add(panel_13);
-		panel_13.setLayout(new BorderLayout(0, 0));
+		panelLegendPark.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[1]));
+		panelLegend.add(panelLegendPark);
+		panelLegendPark.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_2 = new JLabel("공원");
-		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_13.add(lblNewLabel_2, BorderLayout.CENTER);
+		JLabel lblLegendPark = new JLabel("공원");
+		lblLegendPark.setForeground(new Color(255, 255, 255));
+		lblLegendPark.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLegendPark.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelLegendPark.add(lblLegendPark, BorderLayout.CENTER);
 		
-		JPanel panel_14 = new JPanel();
+		JPanel panelLegendSubway = new JPanel();
 //		panel_14.setBackground(new Color(255, 140, 0));
-		panel_14.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[2]));
-		panel_4.add(panel_14);
-		panel_14.setLayout(new BorderLayout(0, 0));
+		panelLegendSubway.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[2]));
+		panelLegend.add(panelLegendSubway);
+		panelLegendSubway.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_3 = new JLabel("지하철");
-		lblNewLabel_3.setForeground(new Color(255, 255, 255));
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_3.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_14.add(lblNewLabel_3, BorderLayout.CENTER);
+		JLabel lblLegendSubway = new JLabel("지하철");
+		lblLegendSubway.setForeground(new Color(255, 255, 255));
+		lblLegendSubway.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLegendSubway.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelLegendSubway.add(lblLegendSubway, BorderLayout.CENTER);
 		
-		JPanel panel_15 = new JPanel();
+		JPanel panelLegendPublic = new JPanel();
 //		panel_15.setBackground(new Color(30, 144, 255));
-		panel_15.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[3]));
-		panel_4.add(panel_15);
-		panel_15.setLayout(new BorderLayout(0, 0));
+		panelLegendPublic.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[3]));
+		panelLegend.add(panelLegendPublic);
+		panelLegendPublic.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_4 = new JLabel("공공시설");
-		lblNewLabel_4.setForeground(new Color(255, 255, 255));
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_4.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_15.add(lblNewLabel_4, BorderLayout.CENTER);
+		JLabel lblLegendPublic = new JLabel("공공시설");
+		lblLegendPublic.setForeground(new Color(255, 255, 255));
+		lblLegendPublic.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLegendPublic.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelLegendPublic.add(lblLegendPublic, BorderLayout.CENTER);
 		
-		JPanel panel_16 = new JPanel();
+		JPanel panelLegendStore = new JPanel();
 //		panel_16.setBackground(new Color(165, 42, 42));
-		panel_16.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[4]));
-		panel_4.add(panel_16);
-		panel_16.setLayout(new BorderLayout(0, 0));
+		panelLegendStore.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[4]));
+		panelLegend.add(panelLegendStore);
+		panelLegendStore.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_5 = new JLabel("상가");
-		lblNewLabel_5.setForeground(new Color(255, 255, 255));
-		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_5.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_16.add(lblNewLabel_5, BorderLayout.CENTER);
+		JLabel lblLegendStore = new JLabel("상가");
+		lblLegendStore.setForeground(new Color(255, 255, 255));
+		lblLegendStore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLegendStore.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelLegendStore.add(lblLegendStore, BorderLayout.CENTER);
 		
-		JPanel panel_17 = new JPanel();
+		JPanel panelLegendETC = new JPanel();
 //		panel_17.setBackground(new Color(0, 0, 0));
-		panel_17.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[5]));
-		panel_4.add(panel_17);
-		panel_17.setLayout(new BorderLayout(0, 0));
+		panelLegendETC.setBackground(GoogleMapTemplate.HexToColor(GoogleMap.getLegendColor()[5]));
+		panelLegend.add(panelLegendETC);
+		panelLegendETC.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_6 = new JLabel("기타");
-		lblNewLabel_6.setForeground(new Color(255, 255, 255));
-		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_6.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_17.add(lblNewLabel_6, BorderLayout.CENTER);
+		JLabel lblLegendETC = new JLabel("기타");
+		lblLegendETC.setForeground(new Color(255, 255, 255));
+		lblLegendETC.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLegendETC.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelLegendETC.add(lblLegendETC, BorderLayout.CENTER);
 		
-		JPanel panel_5 = new JPanel();
+		JPanel panelHome = new JPanel();
+		panelHome.setBackground(Color.WHITE);
 //		panel_5.setBackground(Color.CYAN);
-		panel_5.setBounds(15, 415, 40, 40);
-		panel_3.add(panel_5);
-		panel_5.setLayout(new BorderLayout(0, 0));
+		panelHome.setBounds(17, 415, 40, 40);
+		panelAside.add(panelHome);
+		panelHome.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnNewButton_6 = new JButton("");
-		btnNewButton_6.addActionListener(new ActionListener() {
+		JButton btnHome = new JButton("");
+		btnHome.setContentAreaFilled(false);
+		
+		btnHome.setIcon(imageSetSize(
+				new ImageIcon("./resources/images/outline_home_black_24dp.png"), 
+				panelHome.getWidth() - 5, panelHome.getHeight() - 5));
+		
+		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (GoogleMapTemplate.isCloneMap()) {
 					
@@ -410,20 +438,22 @@ public class MainView extends JFrame {
 				}
 			}
 		});
-		panel_5.add(btnNewButton_6, BorderLayout.CENTER);
+		panelHome.add(btnHome, BorderLayout.CENTER);
 		
-		JPanel panel_6 = new JPanel();
+		JPanel panelZoomLevel = new JPanel();
 //		panel_6.setBackground(Color.MAGENTA);
-		panel_6.setBounds(10, 470, 53, 189);
-		panel_3.add(panel_6);
-		panel_6.setLayout(new BorderLayout(0, 0));
+		panelZoomLevel.setBounds(17, 470, 40, 189);
+		panelAside.add(panelZoomLevel);
+		panelZoomLevel.setLayout(new BorderLayout(0, 0));
 		
-		JSlider slider = new JSlider();
-		slider.addMouseListener(new MouseAdapter() {
+		JSlider sliderZoomLevel = new JSlider();
+		sliderZoomLevel.setBackground(Color.WHITE);
+		sliderZoomLevel.setForeground(Color.BLACK);
+		sliderZoomLevel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				GoogleMapTemplate.Map().setChanged(true);
-				ImageIcon icon = MainController.updateZoomLevelMap(slider.getValue());
+				ImageIcon icon = MainController.updateZoomLevelMap(sliderZoomLevel.getValue());
 				lblGoogleMap.setIcon(icon);
 				
 //				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
@@ -432,28 +462,35 @@ public class MainView extends JFrame {
 				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
 			}
 		});
-		slider.setPaintTicks(true);
-		slider.setMinorTickSpacing(1);
-		slider.setMajorTickSpacing(5);
-		slider.setMaximum(20);
-		slider.setMinimum(1);
-		slider.setValue(GoogleMapTemplate.Map().getZoom());
-		slider.setOrientation(SwingConstants.VERTICAL);
+		sliderZoomLevel.setPaintTicks(true);
+		sliderZoomLevel.setMinorTickSpacing(1);
+		sliderZoomLevel.setMajorTickSpacing(5);
+		sliderZoomLevel.setMaximum(20);
+		sliderZoomLevel.setMinimum(1);
+		sliderZoomLevel.setValue(GoogleMapTemplate.Map().getZoom());
+		sliderZoomLevel.setOrientation(SwingConstants.VERTICAL);
 		
-		panel_6.add(slider, BorderLayout.CENTER);
+		panelZoomLevel.add(sliderZoomLevel, BorderLayout.CENTER);
 		
-		JPanel panel_10 = new JPanel();
-		panel_10.setPreferredSize(new Dimension(25, 25));
-		panel_6.add(panel_10, BorderLayout.NORTH);
-		panel_10.setLayout(new BorderLayout(0, 0));
+		JPanel panelPlusZoom = new JPanel();
+		panelPlusZoom.setBackground(Color.WHITE);
+		panelPlusZoom.setPreferredSize(new Dimension(30, 30));
+		panelZoomLevel.add(panelPlusZoom, BorderLayout.NORTH);
+		panelPlusZoom.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnNewButton_4 = new JButton("+");
-		btnNewButton_4.addActionListener(new ActionListener() {
+		JButton btnPlusZoom = new JButton("");
+		btnPlusZoom.setContentAreaFilled(false);
+		
+		btnPlusZoom.setIcon(imageSetSize(
+				new ImageIcon("./resources/images/outline_add_black_24dp.png"), 
+				panelPlusZoom.getPreferredSize().width - 5, panelPlusZoom.getPreferredSize().height - 5));
+		
+		btnPlusZoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				slider.setValue(slider.getValue() + 1);
+				sliderZoomLevel.setValue(sliderZoomLevel.getValue() + 1);
 
 				GoogleMapTemplate.Map().setChanged(true);
-				ImageIcon icon = MainController.updateZoomLevelMap(slider.getValue());
+				ImageIcon icon = MainController.updateZoomLevelMap(sliderZoomLevel.getValue());
 				lblGoogleMap.setIcon(icon);
 				
 //				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
@@ -462,21 +499,28 @@ public class MainView extends JFrame {
 				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
 			}
 		});
-		btnNewButton_4.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_10.add(btnNewButton_4, BorderLayout.CENTER);
+		btnPlusZoom.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelPlusZoom.add(btnPlusZoom, BorderLayout.CENTER);
 		
-		JPanel panel_11 = new JPanel();
-		panel_11.setPreferredSize(new Dimension(25, 25));
-		panel_6.add(panel_11, BorderLayout.SOUTH);
-		panel_11.setLayout(new BorderLayout(0, 0));
+		JPanel panelMinusZoom = new JPanel();
+		panelMinusZoom.setBackground(Color.WHITE);
+		panelMinusZoom.setPreferredSize(new Dimension(30, 30));
+		panelZoomLevel.add(panelMinusZoom, BorderLayout.SOUTH);
+		panelMinusZoom.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnNewButton_5 = new JButton("-");
-		btnNewButton_5.addActionListener(new ActionListener() {
+		JButton btnMinusZoom = new JButton("");
+		btnMinusZoom.setContentAreaFilled(false);
+		
+		btnMinusZoom.setIcon(imageSetSize(
+				new ImageIcon("./resources/images/outline_remove_black_24dp.png"), 
+				panelMinusZoom.getPreferredSize().width - 5, panelMinusZoom.getPreferredSize().height - 5));
+		
+		btnMinusZoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				slider.setValue(slider.getValue() - 1);
+				sliderZoomLevel.setValue(sliderZoomLevel.getValue() - 1);
 
 				GoogleMapTemplate.Map().setChanged(true);
-				ImageIcon icon = MainController.updateZoomLevelMap(slider.getValue());
+				ImageIcon icon = MainController.updateZoomLevelMap(sliderZoomLevel.getValue());
 				lblGoogleMap.setIcon(icon);
 				
 //				System.out.println(scrollPane.getVerticalScrollBar().getMaximum() + " " + scrollPane.getHorizontalScrollBar().getMaximum());
@@ -485,55 +529,56 @@ public class MainView extends JFrame {
 				scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() / 2 - 300);
 			}
 		});
-		btnNewButton_5.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_11.add(btnNewButton_5, BorderLayout.CENTER);
+		btnMinusZoom.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		panelMinusZoom.add(btnMinusZoom, BorderLayout.CENTER);
 		
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(324, 768));
-		contentPane.add(panel, BorderLayout.WEST);
-		panel.setLayout(new BorderLayout(0, 0));
+		JPanel panelInfoAside = new JPanel();
+		panelInfoAside.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
+		panelInfoAside.setPreferredSize(new Dimension(324, 768));
+		contentPane.add(panelInfoAside, BorderLayout.WEST);
+		panelInfoAside.setLayout(new BorderLayout(0, 0));
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		tabbedPane.setBackground(Color.WHITE);
-		tabbedPane.setPreferredSize(new Dimension(324, 368));
-		panel.add(tabbedPane, BorderLayout.NORTH);
+		JTabbedPane tabbedPaneResult = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPaneResult.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		tabbedPaneResult.setBackground(Color.WHITE);
+		tabbedPaneResult.setPreferredSize(new Dimension(324, 368));
+		panelInfoAside.add(tabbedPaneResult, BorderLayout.NORTH);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		tabbedPane.addTab("검색 결과", null, scrollPane_1, null);
+		JScrollPane scrollPaneSearchResult = new JScrollPane();
+		tabbedPaneResult.addTab("검색 결과", null, scrollPaneSearchResult, null);
 		
-		JList<Toilet> list = new JList<Toilet>();
-		list.addMouseListener(new MouseAdapter() {
+		JList<Toilet> listSearchResult = new JList<Toilet>();
+		listSearchResult.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (list.getSelectedIndex() != -1) {
-					updateToiletInfo(list.getSelectedValue());
+				if (listSearchResult.getSelectedIndex() != -1) {
+					updateToiletInfo(listSearchResult.getSelectedValue());
 				}
 			}
 		});
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listSearchResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		findToiletModel = new DefaultListModel<>();
 		
 		findToiletRenderer = new FindToiletRenderer();
 		
-		list.setModel(findToiletModel);
-		list.setCellRenderer(findToiletRenderer);
+		listSearchResult.setModel(findToiletModel);
+		listSearchResult.setCellRenderer(findToiletRenderer);
 		
-		scrollPane_1.setViewportView(list);
+		scrollPaneSearchResult.setViewportView(listSearchResult);
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		tabbedPane.addTab("전체 결과", null, scrollPane_2, null);
+		JScrollPane scrollPaneSearchTotalResult = new JScrollPane();
+		tabbedPaneResult.addTab("전체 결과", null, scrollPaneSearchTotalResult, null);
 		
-		JList<Toilet> list_1 = new JList<Toilet>();
-		list_1.addMouseListener(new MouseAdapter() {
+		JList<Toilet> listSearchTotalResult = new JList<Toilet>();
+		listSearchTotalResult.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (list_1.getSelectedIndex() != -1) {
+				if (listSearchTotalResult.getSelectedIndex() != -1) {
 					
 					// distance 설정만 따로 해줌
-					double lon1 = Double.parseDouble(list_1.getSelectedValue().getLocY());
-					double lat1 = Double.parseDouble(list_1.getSelectedValue().getLocX());
+					double lon1 = Double.parseDouble(listSearchTotalResult.getSelectedValue().getLocY());
+					double lat1 = Double.parseDouble(listSearchTotalResult.getSelectedValue().getLocX());
 					
 					String[] center = GoogleMapTemplate.Map().getCenter().split(",");
 					double lon2 = Double.parseDouble(center[0]); 
@@ -544,20 +589,20 @@ public class MainView extends JFrame {
 //					이상하게 두번 출력됨 왜그런지 모르겠음 이거 처리는 나중에 생각하자
 //					System.out.printf("%f %f %f %f = %f\n", lon1, lat1, lon2, lat2, distance);
 			
-					list_1.getSelectedValue().setDistance((float) distance);
+					listSearchTotalResult.getSelectedValue().setDistance((float) distance);
 					
-					updateToiletInfo(list_1.getSelectedValue());
+					updateToiletInfo(listSearchTotalResult.getSelectedValue());
 					
 					lblDistance.setText(String.format("%dm", (int)(distance)));
 					
 					// 뒤 바뀌어있음
-					lblLocX.setText(String.format("%.6f", Double.parseDouble(list_1.getSelectedValue().getLocY())));
-					lblLocY.setText(String.format("%.6f", Double.parseDouble(list_1.getSelectedValue().getLocX())));
+					lblLocX.setText(String.format("%.6f", Double.parseDouble(listSearchTotalResult.getSelectedValue().getLocY())));
+					lblLocY.setText(String.format("%.6f", Double.parseDouble(listSearchTotalResult.getSelectedValue().getLocX())));
 				}
 			}
 		});
 		
-		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listSearchTotalResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		DefaultListModel<Toilet> totalToiletModel = new DefaultListModel<>();
 		
@@ -568,178 +613,195 @@ public class MainView extends JFrame {
 		
 		totalToiletRender = new TotalToiletRenderer();
 		
-		list_1.setModel(totalToiletModel);
-		list_1.setCellRenderer(totalToiletRender);
-		scrollPane_2.setViewportView(list_1);
+		listSearchTotalResult.setModel(totalToiletModel);
+		listSearchTotalResult.setCellRenderer(totalToiletRender);
+		scrollPaneSearchTotalResult.setViewportView(listSearchTotalResult);
 		
 		
-		JPanel panel_1 = new JPanel();
+		JPanel panelResultContent = new JPanel();
 //		panel_1.setBackground(Color.LIGHT_GRAY);
-		panel_1.setPreferredSize(new Dimension(324, 350));
-		panel.add(panel_1, BorderLayout.SOUTH);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		panelResultContent.setPreferredSize(new Dimension(324, 350));
+		panelInfoAside.add(panelResultContent, BorderLayout.SOUTH);
+		panelResultContent.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_19 = new JPanel();
-		panel_19.setPreferredSize(new Dimension(324, 150));
-		panel_1.add(panel_19, BorderLayout.NORTH);
-		panel_19.setLayout(new GridLayout(0, 1, 0, 0));
+		JPanel panelBasicResultContent = new JPanel();
+		panelBasicResultContent.setPreferredSize(new Dimension(324, 150));
+		panelResultContent.add(panelBasicResultContent, BorderLayout.NORTH);
+		panelBasicResultContent.setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JPanel panel_20 = new JPanel();
-		panel_19.add(panel_20);
-		panel_20.setLayout(new BorderLayout(0, 0));
+		JPanel panelResultContent1 = new JPanel();
+		panelBasicResultContent.add(panelResultContent1);
+		panelResultContent1.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_21 = new JPanel();
-		panel_21.setPreferredSize(new Dimension(60, 50));
-		panel_21.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_20.add(panel_21, BorderLayout.WEST);
-		panel_21.setLayout(new BorderLayout(0, 0));
+		JPanel panelGuName = new JPanel();
+		panelGuName.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[1]));
+		panelGuName.setPreferredSize(new Dimension(60, 50));
+		panelGuName.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelResultContent1.add(panelGuName, BorderLayout.WEST);
+		panelGuName.setLayout(new BorderLayout(0, 0));
 		
 		lblGuName = new JLabel("GU_NAME");
 		lblGuName.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lblGuName.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_21.add(lblGuName, BorderLayout.CENTER);
+		panelGuName.add(lblGuName, BorderLayout.CENTER);
 		
-		JPanel panel_23 = new JPanel();
-		panel_23.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_20.add(panel_23, BorderLayout.CENTER);
-		panel_23.setLayout(new BorderLayout(0, 0));
+		JPanel panelLocationName = new JPanel();
+		panelLocationName.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[0]));
+		panelLocationName.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelResultContent1.add(panelLocationName, BorderLayout.CENTER);
+		panelLocationName.setLayout(new BorderLayout(0, 0));
 		
 		lblLocationName = new JLabel("LOCATION_NAME");
 		lblLocationName.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lblLocationName.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_23.add(lblLocationName, BorderLayout.CENTER);
+		panelLocationName.add(lblLocationName, BorderLayout.CENTER);
 		
-		JPanel panel_22 = new JPanel();
-		panel_19.add(panel_22);
-		panel_22.setLayout(new BorderLayout(0, 0));
+		JPanel panelResultContent2 = new JPanel();
+		panelBasicResultContent.add(panelResultContent2);
+		panelResultContent2.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_24 = new JPanel();
-		panel_24.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_22.add(panel_24, BorderLayout.CENTER);
-		panel_24.setLayout(new BorderLayout(0, 0));
+		JPanel panelRoadAddress = new JPanel();
+		panelRoadAddress.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[1]));
+		panelRoadAddress.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelResultContent2.add(panelRoadAddress, BorderLayout.CENTER);
+		panelRoadAddress.setLayout(new BorderLayout(0, 0));
 		
 		lblRoadAddress = new JLabel("ROAD_ADDRESS");
 		lblRoadAddress.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRoadAddress.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_24.add(lblRoadAddress, BorderLayout.CENTER);
+		panelRoadAddress.add(lblRoadAddress, BorderLayout.CENTER);
 		
-		JPanel panel_25 = new JPanel();
-		panel_25.setPreferredSize(new Dimension(80, 50));
-		panel_25.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_22.add(panel_25, BorderLayout.WEST);
-		panel_25.setLayout(new BorderLayout(0, 0));
+		JPanel panelDistance = new JPanel();
+		panelDistance.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[2]));
+		panelDistance.setPreferredSize(new Dimension(80, 50));
+		panelDistance.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelResultContent2.add(panelDistance, BorderLayout.WEST);
+		panelDistance.setLayout(new BorderLayout(0, 0));
 		
 		lblDistance = new JLabel("DISTACNE");
 		lblDistance.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDistance.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_25.add(lblDistance, BorderLayout.CENTER);
+		panelDistance.add(lblDistance, BorderLayout.CENTER);
 		
-		JPanel panel_26 = new JPanel();
-		panel_19.add(panel_26);
-		panel_26.setLayout(new BorderLayout(0, 0));
+		JPanel panelResultContent3 = new JPanel();
+		panelBasicResultContent.add(panelResultContent3);
+		panelResultContent3.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_28 = new JPanel();
-		panel_28.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_26.add(panel_28, BorderLayout.CENTER);
-		panel_28.setLayout(new BorderLayout(0, 0));
+		JPanel panelNumAddress = new JPanel();
+		panelNumAddress.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[2]));
+		panelNumAddress.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelResultContent3.add(panelNumAddress, BorderLayout.CENTER);
+		panelNumAddress.setLayout(new BorderLayout(0, 0));
 		
 		lblNumAddress = new JLabel("NUM_ADDRESS");
 		lblNumAddress.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumAddress.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_28.add(lblNumAddress, BorderLayout.CENTER);
+		panelNumAddress.add(lblNumAddress, BorderLayout.CENTER);
 		
-		JPanel panel_29 = new JPanel();
-		panel_29.setPreferredSize(new Dimension(100, 50));
-		panel_29.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_26.add(panel_29, BorderLayout.WEST);
-		panel_29.setLayout(new BorderLayout(0, 0));
+		JPanel panelPhone = new JPanel();
+		panelPhone.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[3]));
+		panelPhone.setPreferredSize(new Dimension(100, 50));
+		panelPhone.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelResultContent3.add(panelPhone, BorderLayout.WEST);
+		panelPhone.setLayout(new BorderLayout(0, 0));
 		
 		lblPhone = new JLabel("PHONE");
 		lblPhone.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPhone.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_29.add(lblPhone, BorderLayout.CENTER);
+		panelPhone.add(lblPhone, BorderLayout.CENTER);
 		
-		JPanel panel_27 = new JPanel();
-		panel_19.add(panel_27);
-		panel_27.setLayout(new BorderLayout(0, 0));
+		JPanel panelResultContent4 = new JPanel();
+		panelBasicResultContent.add(panelResultContent4);
+		panelResultContent4.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_32 = new JPanel();
-		panel_32.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_32.setPreferredSize(new Dimension(50, 50));
-		panel_27.add(panel_32, BorderLayout.EAST);
-		panel_32.setLayout(new BorderLayout(0, 0));
+		JPanel panelUsingTime = new JPanel();
+		panelUsingTime.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[3]));
+		panelUsingTime.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelUsingTime.setPreferredSize(new Dimension(50, 50));
+		panelResultContent4.add(panelUsingTime, BorderLayout.EAST);
+		panelUsingTime.setLayout(new BorderLayout(0, 0));
 		
 		lblUsingTime = new JLabel("USING_TIME");
 		lblUsingTime.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsingTime.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_32.add(lblUsingTime, BorderLayout.CENTER);
+		panelUsingTime.add(lblUsingTime, BorderLayout.CENTER);
 		
-		JPanel panel_33 = new JPanel();
-		panel_27.add(panel_33, BorderLayout.CENTER);
-		panel_33.setLayout(new GridLayout(0, 2, 0, 0));
+		JPanel panelLocXY = new JPanel();
+		panelLocXY.setBackground(Color.WHITE);
+		panelResultContent4.add(panelLocXY, BorderLayout.CENTER);
+		panelLocXY.setLayout(new GridLayout(0, 2, 0, 0));
 		
-		JPanel panel_30 = new JPanel();
-		panel_30.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_33.add(panel_30);
-		panel_30.setLayout(new BorderLayout(0, 0));
+		JPanel panelLocX = new JPanel();
+		panelLocX.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[3]));
+		panelLocX.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelLocXY.add(panelLocX);
+		panelLocX.setLayout(new BorderLayout(0, 0));
 		
 		lblLocX = new JLabel("LOC_X");
 		lblLocX.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLocX.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_30.add(lblLocX, BorderLayout.CENTER);
+		panelLocX.add(lblLocX, BorderLayout.CENTER);
 		
-		JPanel panel_31 = new JPanel();
-		panel_31.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_33.add(panel_31);
-		panel_31.setLayout(new BorderLayout(0, 0));
+		JPanel panelLocY = new JPanel();
+		panelLocY.setBackground(GoogleMapTemplate.HexToColor(detailBgColor[3]));
+		panelLocY.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelLocXY.add(panelLocY);
+		panelLocY.setLayout(new BorderLayout(0, 0));
 		
 		lblLocY = new JLabel("LOC_Y");
 		lblLocY.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLocY.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-		panel_31.add(lblLocY, BorderLayout.CENTER);
+		panelLocY.add(lblLocY, BorderLayout.CENTER);
 		
-		panel_MarkerColor = new JPanel();
-		panel_MarkerColor.setPreferredSize(new Dimension(40, 50));
-		panel_MarkerColor.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_27.add(panel_MarkerColor, BorderLayout.WEST);
-		panel_MarkerColor.setLayout(new BorderLayout(0, 0));
+		panelMarkerColor = new JPanel();
+		panelMarkerColor.setBackground(Color.WHITE);
+		panelMarkerColor.setPreferredSize(new Dimension(40, 50));
+		panelMarkerColor.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelResultContent4.add(panelMarkerColor, BorderLayout.WEST);
+		panelMarkerColor.setLayout(new BorderLayout(0, 0));
 		
 		lblMarkerLabel = new JLabel("Label");
 		lblMarkerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMarkerLabel.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		panel_MarkerColor.add(lblMarkerLabel, BorderLayout.CENTER);
+		panelMarkerColor.add(lblMarkerLabel, BorderLayout.CENTER);
 
 		
-		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setPreferredSize(new Dimension(324, 200));
-		panel_1.add(scrollPane_3, BorderLayout.SOUTH);
+		JScrollPane scrollPaneDetailResultContent = new JScrollPane();
+		scrollPaneDetailResultContent.setPreferredSize(new Dimension(324, 200));
+		panelResultContent.add(scrollPaneDetailResultContent, BorderLayout.SOUTH);
 		
-		table = new JTable();
-		table.setFillsViewportHeight(true);
+		tableDetailResultContent = new JTable();
+		tableDetailResultContent.setFillsViewportHeight(true);
 		
-		table.setModel(new DefaultTableModel(toiletDetailTable, toiletDetailTableHeader));
+		tableDetailResultContent.setModel(new DefaultTableModel(toiletDetailTable, toiletDetailTableHeader));
 		
-		table.setRowSelectionAllowed(false);
-		table.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		tableDetailResultContent.setRowSelectionAllowed(false);
+		tableDetailResultContent.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
 		
-		table.setDefaultRenderer(Object.class, new ToiletDetailTableRenderer());
+		tableDetailResultContent.setDefaultRenderer(Object.class, new ToiletDetailTableRenderer());
 		
 //		table.getColumn("상세 제목").setPreferredWidth(100);
-		table.getColumn("상세 내용").setPreferredWidth(200);
+		tableDetailResultContent.getColumn("상세 내용").setPreferredWidth(200);
 //		table.getColumn("상세 내용").setCellRenderer(new ToiletDetailTableRenderer());
 		
-		table.setRowHeight(50);
+		tableDetailResultContent.setRowHeight(50);
 		
-		setTableColumnAlignCenter(table);
+		setTableColumnAlignCenter(tableDetailResultContent);
 		
-		scrollPane_3.setViewportView(table);
+		scrollPaneDetailResultContent.setViewportView(tableDetailResultContent);
+	}
+	
+	private ImageIcon imageSetSize(ImageIcon icon, int w, int h) {
+		Image image = icon.getImage();
+		Image newImage = image.getScaledInstance(w, h,Image.SCALE_SMOOTH);
+		return new ImageIcon(newImage);
 	}
 	
 	private void updateToiletInfo(Toilet toilet) {
 		
 		lblMarkerLabel.setText(toilet.getMarkerLabel());
 		lblMarkerLabel.setForeground(Color.WHITE);
-		panel_MarkerColor.setBackground(GoogleMapTemplate.HexToColor(toilet.getColor()));
+		panelMarkerColor.setBackground(GoogleMapTemplate.HexToColor(toilet.getColor()));
 		lblDistance.setText(String.format("%dm", (int)(toilet.getDistance() * 1000)));
 		
 		lblLocationName.setText(toilet.getLocationName());
@@ -785,9 +847,9 @@ public class MainView extends JFrame {
 		toiletDetailTable[3][1] = toilet.getDatailContent4() == null ? "" : toilet.getDatailContent4();
 		toiletDetailTable[4][1] = toilet.getDatailContent5() == null ? "" : toilet.getDatailContent5();
 		
-		table.setModel(new DefaultTableModel(toiletDetailTable, toiletDetailTableHeader));
-		setTableColumnAlignCenter(table);
-		table.getColumn("상세 내용").setPreferredWidth(200);
+		tableDetailResultContent.setModel(new DefaultTableModel(toiletDetailTable, toiletDetailTableHeader));
+		setTableColumnAlignCenter(tableDetailResultContent);
+		tableDetailResultContent.getColumn("상세 내용").setPreferredWidth(200);
 	}
 	
 	// table column 가운데 정렬 시켜주는 메소드
@@ -875,11 +937,11 @@ public class MainView extends JFrame {
 			
 			toilet = value;
 			
-			panel_1.setBackground(GoogleMapTemplate.HexToColor(toilet.getColor()));
+			this.panelListMarkLabel.setBackground(GoogleMapTemplate.HexToColor(toilet.getColor()));
 			
-			lblNewLabel.setText(value.getMarkerLabel());
-			lblNewLabel_1.setText(String.format("%dm", (int)(value.getDistance() * 1000)));
-			lblNewLabel_2.setText(value.getLocationName());
+			this.lblListMarkLabel.setText(value.getMarkerLabel());
+			this.lblListDistance.setText(String.format("%dm", (int)(value.getDistance() * 1000)));
+			this.lblListAddress.setText(value.getLocationName());
 			
 			return this;
 		}
