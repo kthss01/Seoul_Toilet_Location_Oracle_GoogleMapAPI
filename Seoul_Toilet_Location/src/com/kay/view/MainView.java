@@ -88,28 +88,9 @@ public class MainView extends JFrame {
 	private JLabel lblGoogleMap;
 	private JScrollPane scrollPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainView frame = new MainView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public MainView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(300, 100, 1024, 768);
+		setBounds(250, 100, 1024, 768);
 		contentPane = new JPanel();
 		
 		contentPane.setBackground(GoogleMapTemplate.HexToColor(backgroundColor));
