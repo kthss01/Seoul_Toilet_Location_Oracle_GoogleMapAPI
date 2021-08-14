@@ -27,103 +27,103 @@ public class MainController {
 	public static ImageIcon setMap(String location) {
 		if (!location.equals(""))
 			Map().setCenter(location);
-		
+
 		downloadMap();
 		ImageIcon icon = getMap();
 		fileDelete();
-		
+
 		return icon;
 	}
-	
+
 	public static ImageIcon setToiletMap(Toilet toilet) {
 
 		String center = GoogleMapTemplate.OriginMap().getCenter();
-		
+
 		Marker centerMarker = new Marker(center);
-		
+
 		Map().clearMap();
-		
+
 		Map().setCenter(toilet.getLocation());
-		
+
 		Map().getMarkers().addMarker(centerMarker);
-		
+
 		String size = "mid";
 		String color = toilet.getColor();
 		String label = toilet.getMarkerLabel();
-		
+
 		Map().getMarkers().addMarker(new Marker(size, color, label, toilet.getLocation()));
-		
+
 		Path path = new Path();
 		path.setColor(color);
-		
+
 		path.setLocation(toilet.getLocation());
 		path.setLocation(center);
-		
+
 		Map().getPaths().addPath(path);
-		
+
 		downloadMap();
 		ImageIcon icon = getMap();
 		fileDelete();
-		
+
 		return icon;
 	}
-	
+
 	public static ImageIcon findToiletMap(String address) {
-		
+
 		Map().setCenter(address);
 		Map().getMarkers().getMarkers().clear();
 		Map().getMarkers().getMarkers().add(new Marker(address));
-		
+
 		updateMarker();
-		
+
 		downloadMap();
 		ImageIcon icon = getMap();
 		fileDelete();
-		
+
 		return icon;
 	}
-	
+
 	public static ImageIcon downloadGoogleMap() {
 		downloadMap();
 		ImageIcon icon = getMap();
 		fileDelete();
-		
+
 		return icon;
 	}
-	
+
 	public static ImageIcon updateMapTypeMap(String maptype) {
 		Map().setMaptype(maptype);
-		
+
 		downloadMap();
 		ImageIcon icon = getMap();
 		fileDelete();
-		
+
 		return icon;
 	}
-	
+
 	public static ImageIcon updateZoomLevelMap(int zoomLevel) {
 		Map().setZoom(zoomLevel);
-		
+
 		downloadMap();
 		ImageIcon icon = getMap();
 		fileDelete();
-		
+
 		return icon;
 	}
 
 	private static void updateMarker() {
 		List<Toilet> toiletList = LocationTemplate.getNearToilet();
-		for (int i=0; i < toiletList.size(); i++) {
+		for (int i = 0; i < toiletList.size(); i++) {
 			Toilet toilet = toiletList.get(i);
 			System.out.println(toilet);
-			
+
 			String size = "mid";
 			String color = toilet.getColor();
 			String label = toilet.getMarkerLabel();
-			
+
 			Map().getMarkers().addMarker(new Marker(size, color, label, toilet.getLocation()));
 		}
-		
+
 	}
 
 	public static void addMarker(String location, String size, String color, String label) {
@@ -200,61 +200,63 @@ public class MainController {
 //			System.out.println(e.getMessage());
 //		}
 //	}
-	
+
 	public Map<String, Toilet> selectAllToilet() {
 		Map<String, Toilet> map = null;
-		
+
 		try {
 			map = new MainService().selectAllToilet();
 		} catch (MainException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return map;
 	}
-	
+
 	// 도로명 주소 본번 주번으로 서울 위치 테이블에서 해당 위치를 찾아주는 함수
 	public Location selectAddressSeoulLocation(String address, String mainNum, String subNum) {
 		Location location = null;
-		
+
 		try {
 			location = new MainService().selectAddressSeoulLocation(address, mainNum, subNum);
 		} catch (MainException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return location;
 	}
-	
+
 	// 좌표 x,y 로 서울 위치 테이블에서 좌표와 가장 가까운 해당 위치를 찾아주는 함수
 	public Location selectXYSeoulLocation(String loc_x, String loc_y) {
 		Location location = null;
-		
-		// 서울 위치 테이블은 GRS80 좌표계로 되어있기 때문에 
+
+		// 서울 위치 테이블은 GRS80 좌표계로 되어있기 때문에
 		// 입력받은 WGS84 좌표계를 GRS80 좌표계로 변환 필요
-		Point2D.Double loc = LocationTemplate.getTransformWGSToGRS(Double.parseDouble(loc_y), Double.parseDouble(loc_x));
+		Point2D.Double loc = LocationTemplate.getTransformWGSToGRS(Double.parseDouble(loc_y),
+				Double.parseDouble(loc_x));
 		loc_x = String.valueOf(loc.getX());
 		loc_y = String.valueOf(loc.getY());
-		
+
 		try {
 			location = new MainService().selectXYSeoulLocation(loc_x, loc_y);
 		} catch (MainException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return location;
 	}
-	
+
 	// 좌표 x,y 로 화장실 테이블에서 가장 가까운 화장실을 찾고 그 거리를 계산하는 함수
 	public void selectFindToilet(String loc_x, String loc_y) {
 		// 서울 위치 테이블은 GRS80 좌표계로 되어있고
 		// 화장실 테이블은 WGS84 좌표계이기 때문에
 		// GRS80 -> WGS84로 좌표계 변환 필요
-		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(loc_x), Double.parseDouble(loc_y));
-		
+		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(loc_x),
+				Double.parseDouble(loc_y));
+
 		loc_x = String.valueOf(loc.getX());
 		loc_y = String.valueOf(loc.getY());
-		
+
 		try {
 			new MainService().selectFindToilet(loc_x, loc_y);
 		} catch (MainException e) {
@@ -264,32 +266,37 @@ public class MainController {
 
 	public String searchAddressSeoulLocation(String address) {
 		// 서울 종로구 삼일대로19길 24 이와 같은 형태로 옴 split해서 쓸 예정
-		
+
 		int offset = address.split(" ").length - 2;
-		
+		if (address.split(" ").length == 5)
+			offset--;
+
 		String mainNum = address.split(" ")[1 + offset];
 		String subNum = mainNum.indexOf("-") != -1 ? mainNum.split("-")[1] : "0";
 		mainNum = mainNum.indexOf("-") != -1 ? mainNum.split("-")[0] : mainNum;
 		address = address.split(" ")[offset];
+		
+		System.out.println(address + " " + mainNum + " " + subNum);
+		
 		Location location = selectAddressSeoulLocation(address, mainNum, subNum);
-		
+
 		System.out.println(location);
-		
-		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(location.getLoc_x()), Double.parseDouble(location.getLoc_y()));
+
+		Point2D.Double loc = LocationTemplate.getTransformGRSToWGS(Double.parseDouble(location.getLoc_x()),
+				Double.parseDouble(location.getLoc_y()));
 		String loc_x = String.format("%.6f", loc.getX());
 		String loc_y = String.format("%.6f", loc.getY());
-		
+
 		new MainController().selectFindToilet(location.getLoc_x(), location.getLoc_y());
-		
+
 		return loc_y + "," + loc_x;
-		
-		
+
 //		return subNum.equals("0") || subNum.equals("") ? address + " " + mainNum : address + " " + mainNum + "-" + subNum; 
 	}
-	
+
 	public String searchXYSeoulLocation(String address) {
 		// 37.56970320467521, 126.96665458339758 와 같은 형태로 옴
-		
+
 		String[] xy = address.split(", ");
 //		Location location = selectXYSeoulLocation(xy[0], xy[1]);
 //		
@@ -301,18 +308,18 @@ public class MainController {
 //		
 //		new MainController().selectFindToilet(location.getLoc_x(), location.getLoc_y());
 
-		Point2D.Double loc = LocationTemplate.getTransformWGSToGRS(Double.parseDouble(xy[1]), Double.parseDouble(xy[0]));
+		Point2D.Double loc = LocationTemplate.getTransformWGSToGRS(Double.parseDouble(xy[1]),
+				Double.parseDouble(xy[0]));
 		String loc_x = String.valueOf(loc.getX());
 		String loc_y = String.valueOf(loc.getY());
-		
+
 		new MainController().selectFindToilet(loc_x, loc_y);
-		
+
 		loc_x = String.format("%.6f", Double.parseDouble(xy[0]));
 		loc_y = String.format("%.6f", Double.parseDouble(xy[1]));
-		
+
 		return loc_x + "," + loc_y;
-		
-		
+
 //		return subNum.equals("0") || subNum.equals("") ? address + " " + mainNum : address + " " + mainNum + "-" + subNum; 
 	}
 }
